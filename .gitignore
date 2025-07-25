@@ -1,0 +1,16 @@
+# Jekyll build output
+_site/
+
+# Sass cache
+.sass-cache/
+
+# Jekyll metadata
+.jekyll-metadata
+
+# macOS files
+.DS_Store
+
+# Gemini CLI state
+# Ignore the directory, but un-ignore the config file.
+.gemini/
+!.gemini/gemini.md
