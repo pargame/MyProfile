@@ -11,3 +11,4 @@
 *   [**소개 (About Me)**](about.md)
 *   [**프로젝트 (Projects)**](projects.md)
 *   [**스터디 (Studies)**](studies.md)
+*   [**즐긴 게임 (Played Games)**](games.md)
