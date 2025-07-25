@@ -14,3 +14,6 @@ _site/
 # Ignore the directory, but un-ignore the config file.
 .gemini/
 !.gemini/gemini.md
+
+# Local Private Files
+local.md
