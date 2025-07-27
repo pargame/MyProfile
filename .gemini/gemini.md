@@ -118,4 +118,19 @@ Windows 환경에서 이 저장소를 클론하고 워크플로우를 이어갈 
     4.  **로컬 미리보기**: `README.md`의 지침에 따라 로컬 서버를 실행하여 변경 사항을 미리 확인합니다.
     5.  **Git 커밋 및 푸시**: 변경 사항을 커밋하고 GitHub에 푸시하여 웹사이트를 업데이트합니다.
 
+---
+
+### 9. 스타일 규칙 적용
+
+*   **적용 내용**: `assets/css/style.css` 파일에 폰트, 기본 색상, 본문 여백, 줄 간격, 링크 스타일 등 전반적인 가독성과 깔끔함을 개선하는 CSS 규칙을 적용했습니다.
+*   **세부 변경 사항**:
+    *   `body`: `font-family`, `line-height`, `color`, `background-color`, `margin`, `padding` 조정.
+    *   `.wrapper`: `max-width`, `margin`, `padding` 추가.
+    *   `header`: `margin-bottom`, `padding`, `border-bottom` 추가.
+    *   `header h1`: `margin`, `font-size` 조정.
+    *   `nav a`: `margin-left`, `text-decoration`, `color`, `font-weight` 조정 및 `:hover` 효과 추가.
+    *   `.post-list li`: `margin-bottom`, `padding-bottom`, `border-bottom` 조정 및 마지막 항목에 `border-bottom: none` 추가.
+    *   `.post-meta`: `font-size` 조정.
+    *   `.site-footer`: `text-align`, `padding`, `margin-top`, `border-top`, `color`, `font-size` 조정 및 링크 스타일 추가.
+
 이 모든 과정을 `.gemini/gemini.md`에 기록했습니다.
