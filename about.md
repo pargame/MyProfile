@@ -3,7 +3,7 @@
 저에 대한 연혁 및 소개 개요입니다.
 
 <details markdown="1">
-<summary> 연대기 </summary>
+<summary><h3>연대기</h3></summary>
 
 *   **2000.12:** 출생
 *   **2016.03:** 가온고등학교 기숙생 입학
