@@ -11,9 +11,14 @@ _site/
 .DS_Store
 
 # Gemini CLI state
-# Ignore the directory, but un-ignore the config file.
+# Ignore the directory, but un-ignore the config file
 .gemini/
 !.gemini/gemini.md
 
 # Local Private Files
 local.md
+
+# Bundler/Jekyll local environment
+Gemfile
+Gemfile.lock
+.bundle/
