@@ -13,7 +13,7 @@ Jekyll 사이트를 로컬에서 미리 보려면 다음 단계를 따르세요:
 2.  **Jekyll 서버 실행:**
 
     ```bash
-    BUNDLE_PATH=vendor/bundle bundle exec jekyll serve --port 4001
+    BUNDLE_PATH=vendor/bundle bundle exec jekyll serve --port 4000
     ```
 
     서버가 시작되면 `http://127.0.0.1:4001` 또는 터미널에 표시되는 주소로 접속하여 사이트를 미리 볼 수 있습니다.
