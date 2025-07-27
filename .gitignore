@@ -1,24 +1,6 @@
-# Jekyll build output
 _site/
-
-# Sass cache
-.sass-cache/
-
-# Jekyll metadata
+.jekyll-cache/
 .jekyll-metadata
-
-# macOS files
-.DS_Store
-
-# Gemini CLI state
-# Ignore the directory, but un-ignore the config file
-.gemini/
-!.gemini/gemini.md
-
-# Local Private Files
-local.md
-
-# Bundler/Jekyll local environment
+.bundle/
 Gemfile
 Gemfile.lock
-.bundle/

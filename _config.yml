@@ -1,10 +1,26 @@
-title: 안녕하세요! Pargame입니다.
-description: Github Page를 이용한 자기소개 겸 블로그를 만들었습니다.
-theme: minima
+title: MyProfile
+description: "A simple Jekyll site for my profile."
 
-# Minima 테마 설정: 상단 네비게이션에 표시할 페이지 목록
 header_pages:
   - about.md
   - projects.md
   - studies.md
-  - games.md
+
+style: dark
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Exclude from processing.
+exclude:
+  - .gemini/
+  - .gitignore
+  - .jekyll-cache/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

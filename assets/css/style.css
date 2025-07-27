@@ -1,0 +1,28 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+nav a {
+  margin-left: 10px;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  margin-bottom: 20px;
+}
+
+.post-meta {
+  color: #828282;
+}
