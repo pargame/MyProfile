@@ -15,22 +15,8 @@
               {{ site.title | escape }}
             {%- endif -%}
             </li>
-                        {%- if site.email -%}
-            <li>
-              <a id="email-link" href="#" class="u-email">
-                <span id="email-text">001201parg [at] gmail [dot] com</span>
-              </a>
-              <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                  const emailAddress = "001201parg" + "@" + "gmail" + "." + "com";
-                  const mailtoLink = "mailto:" + emailAddress;
-                  const emailLinkElement = document.getElementById("email-link");
-                  if (emailLinkElement) {
-                    emailLinkElement.setAttribute("href", mailtoLink);
-                  }
-                });
-              </script>
-            </li>
+            {%- if site.email -%}
+            <li><a class="u-email" href="mailto:{{ site.email }}">{{ site.email }}</a></li>
             {%- endif -%}
         </ul>
       </div>

@@ -5,6 +5,8 @@ layout: page
 
 저에 대한 연혁 및 소개 개요입니다.
 
+---
+
 <details open markdown="1">
 <summary><strong style="font-size: 1.25rem;">연대기</strong></summary>
 

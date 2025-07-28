@@ -1,0 +1,17 @@
+/* Overrides for a pure black theme */
+body {
+    background-color: #000000 !important;
+    color: #e0e0e0 !important;
+}
+
+a {
+    color: #4abaff !important;
+}
+
+.site-title, .site-title:visited {
+    color: #ffffff !important;
+}
+
+.site-nav .page-link {
+    color: #d0d0d0 !important;
+}
