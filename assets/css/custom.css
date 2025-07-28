@@ -15,3 +15,39 @@ a {
 .site-nav .page-link {
     color: #d0d0d0 !important;
 }
+
+/* --- Post and Page Specific Overrides --- */
+
+/* Ensure post/page backgrounds are transparent to inherit body color */
+.post, .page, .home {
+    background-color: transparent !important;
+}
+
+/* Post header styles */
+.post-header {
+    background-color: transparent !important;
+}
+.post-title, .page-heading {
+    color: #ffffff !important;
+}
+.post-meta {
+    color: #a0a0a0 !important; /* Lighter gray for metadata */
+}
+
+/* Post content styles */
+.post-content, .post-content p, .post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
+    background-color: transparent !important;
+    color: #e0e0e0 !important;
+}
+
+/* Footer styles */
+.site-footer {
+    background-color: transparent !important;
+    border-top: 1px solid #333333; /* Darker border */
+}
+.footer-heading {
+    color: #ffffff !important;
+}
+.contact-list, .social-media-list, .p, .rss-subscribe a {
+    color: #a0a0a0 !important;
+}

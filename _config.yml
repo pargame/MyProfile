@@ -3,7 +3,11 @@ email: 001201parg@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
 
 # twitter_username: jekyllrb
-github_username: pargamer
+github_username: pargame
+
+# Comment system
+disqus:
+  shortname: # 여기에 Disqus shortname을 입력하세요. 예: myprofile-blog
 
 # Build settings
 theme: minima
@@ -12,12 +16,18 @@ minima:
 
 plugins:
   - jekyll-feed
+  - jekyll-seo-tag
 
 header_pages:
   - about.md
   - studies.md
   - projects.md
-  - games.md
+
+collections:
+  studies:
+    output: true
+  projects:
+    output: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.
