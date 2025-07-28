@@ -112,6 +112,18 @@ blockquote {
   display: none; /* Hide text, show only icons */
 }
 
+.social-media-list .email-text {
+  display: inline; /* Show email text */
+  text-decoration: none;
+  color: #e0e0e0;
+  margin-left: 5px;
+}
+
+.social-media-list a[href^="mailto:"] .svg-icon {
+    display: none; /* Hide email icon */
+}
+
+
 .copyright {
   width: 100%;
   margin-top: 15px;

@@ -21,7 +21,7 @@
 
 *   **디자인 및 레이아웃**:
     *   **사이트 타이틀**: `_config.yml`의 `title`을 **Pargame**으로 변경하여 사이트 정체성 확립.
-    *   **푸터**: 'Contact' 레이블과 소셜 아이콘(GitHub, Email)이 정상적으로 표시되도록 `footer.html` 구조와 `custom.css`를 수정.
+    *   **푸터**: 'Contact' 레이블 옆에 이메일 주소는 텍스트로, GitHub는 아이콘으로 명확히 표시되도록 `social.html`과 `custom.css`를 최종 수정.
     *   **RSS 링크 제거**: `home.html` 레이아웃 하단의 'via RSS' 링크를 완전히 제거하여 사용자 혼란 방지.
 
 *   **주요 기능**:
