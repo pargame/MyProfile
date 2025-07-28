@@ -16,7 +16,7 @@ layout: page
     searchInput: document.getElementById('search-input'),
     resultsContainer: document.getElementById('results-container'),
     json: '/search.json',
-    searchResultTemplate: '<li><a href="{url}">{title}</a><span class="search-meta">{date} | {category}</span></li>',
+    searchResultTemplate: '<li><a href="{url}">{title}</a><span class="search-meta">{meta}</span></li>',
     noResultsText: 'No results found',
     limit: 20,
     fuzzy: false,
