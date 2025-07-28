@@ -55,7 +55,7 @@
 *   `README.md`: 프로젝트의 개요와 사용자 관점의 가이드.
 *   `categories.md`: `site.articles` 컬렉션만을 대상으로 카테고리 목록을 생성.
 *   `studies.md` / `projects.md`: 각각 `site.studies`와 `site.projects` 컬렉션을 `In:` 속성으로 그룹핑하여 목록 생성.
-*   `search.json`: 모든 컬렉션의 콘텐츠를 검색 대상으로 하며, `tags` 필드는 제거됨.
+*   `search.json`: 모든 컬렉션(`articles`, `studies`, `projects`)의 콘텐츠를 통합 검색 대상으로 합니다. 검색 결과 표시를 위해 동적으로 `meta` 필드를 생성하며, `search.md`는 `site.baseurl`을 통해 이 파일을 참조하여 GitHub Pages 호환성을 보장합니다.
 
 ---
 
