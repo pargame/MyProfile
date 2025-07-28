@@ -22,6 +22,7 @@ header_pages:
   - about.md
   - studies.md
   - projects.md
+  - categories.md
 
 collections:
   studies:
