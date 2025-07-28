@@ -1,41 +1,91 @@
-# MyProfile
+# MyProfile - A Jekyll-powered Personal Blog
 
-이 프로젝트는 Jekyll을 사용하여 구축된 개인 포트폴리오 및 블로그입니다.
+This is the repository for the MyProfile personal blog, built with Jekyll and using a customized version of the Minima theme.
 
-## 로컬에서 사이트 실행하기
+## 🚀 Getting Started
 
-`Gemfile`이 포함되어 있어, 표준 Bundler 워크플로우를 사용하여 쉽게 로컬 환경을 설정하고 사이트를 미리 볼 수 있습니다.
+To run the site locally, you'll need to have Ruby and Bundler installed.
 
-1.  **의존성 설치 (최초 1회 또는 Gemfile 변경 시):**
-    프로젝트에 필요한 Jekyll 및 관련 플러그인(Gems)을 설치합니다.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/pargame/MyProfile.git
+    cd MyProfile
+    ```
+
+2.  **Install dependencies:**
+    This project uses `bundler` to manage Ruby gems. All dependencies are installed into the `vendor/bundle` directory.
     ```bash
     bundle install
     ```
 
-2.  **Jekyll 서버 실행:**
-    로컬 서버를 시작하여 사이트를 미리 봅니다.
+3.  **Run the local server:**
+    This command will build the site and start a local server at `http://localhost:4000`. The site will automatically rebuild when you make changes to the files.
     ```bash
-    bundle exec jekyll serve
+    bundle exec jekyll serve --port 4000
     ```
-    서버가 시작되면 터미널에 표시되는 주소(보통 `http://127.0.0.1:4000`)로 접속하여 사이트를 확인할 수 있습니다.
-
-3.  **서버 종료 (매우 중요):**
-    사이트 확인 후, 서버가 실행 중인 터미널에서 `Ctrl + C`를 눌러 서버를 반드시 종료해야 합니다.
 
 ---
 
-### 문제 해결
+## ✍️ Content Management
 
-**'Address already in use' 오류 발생 시:**
-이 오류는 이전에 실행한 서버 프로세스가 아직 종료되지 않았을 때 발생합니다. 다음 명령으로 해당 프로세스를 찾아 강제 종료할 수 있습니다.
+This blog is designed for easy content creation and management.
 
-1.  포트 4000번을 사용하는 프로세스 찾기:
-    ```bash
-    lsof -i :4000
+### How to Write a New Blog Post
+
+1.  **Create a new file** in the `_posts` directory.
+2.  **Name the file** using the following format: `YYYY-MM-DD-your-post-title.md`.
+    *   Example: `2025-08-15-my-awesome-post.md`
+3.  **Add Front Matter** to the top of the file. This is where you set the title, date, categories, and tags for your post. Use the template below as a starting point:
+
+    ```yaml
+    ---
+    layout: post
+    title:  "Your Awesome Post Title Here"
+    date:   2025-08-15 10:00:00 +0900
+    categories: tech # You can list one or more categories
+    tags:
+      - Jekyll
+      - "Web Development"
+      - "Getting Started"
+    ---
+
+    (Your post content, written in Markdown, goes here...)
     ```
-    (출력된 내용에서 `PID` 열의 숫자를 확인합니다.)
 
-2.  해당 프로세스 종료하기 (예시: PID가 1234인 경우):
-    ```bash
-    kill -9 1234
-    ```
+    *   **`layout`**: Should always be `post`.
+    *   **`title`**: The title of your post.
+    *   **`date`**: The publication date and time.
+    *   **`categories`**: The main category of the post.
+    *   **`tags`**: Specific keywords for the post. If a tag contains spaces, enclose it in quotes.
+
+### How to Manage "Studies" and "Projects"
+
+The "Studies" and "Projects" sections are managed as **collections**. This makes them easy to organize.
+
+*   **To add a new Study page:** Create a new `.md` file in the `_studies` directory.
+*   **To add a new Project page:** Create a new `.md` file in the `_projects` directory.
+
+Each file should have simple Front Matter like this:
+
+```yaml
+---
+layout: page
+title: "Title of Your Study/Project"
+---
+
+(Content goes here...)
+```
+
+---
+
+## ⚙️ Site Configuration
+
+Most global settings for the site are located in the `_config.yml` file. This includes:
+
+*   `title`: The title of your blog.
+*   `author`: Your name.
+*   `email`: Your contact email.
+*   `github_username`: Your GitHub username for social links.
+*   `disqus.shortname`: Your Disqus shortname to enable comments. Leave it blank to disable them.
+
+Any changes to `_config.yml` require you to restart the Jekyll server to take effect.
