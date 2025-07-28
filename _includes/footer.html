@@ -1,14 +1,14 @@
 <footer class="site-footer">
   <div class="wrapper">
-    <div class="footer-col-wrapper">
-      <div class="footer-col">
-        <p class="feed-subscribe">
-          <!-- RSS link removed for better user experience -->
-        </p>
-        <p class="contact-info">
-          <span class="contact-label">Contact:</span>
-          {%- include social.html -%}
-        </p>
+    <div class="footer-content">
+      <div class="contact-info">
+        <span class="contact-label">Contact</span>
+        {%- include social.html -%}
+      </div>
+      <div class="version-info">
+        {%- if site.data.version.commit -%}
+          <span class="version-label">v1.0 (commit: {{ site.data.version.commit }})</span>
+        {%- endif -%}
       </div>
     </div>
     <div class="copyright">

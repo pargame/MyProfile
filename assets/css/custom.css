@@ -76,19 +76,21 @@ blockquote {
 }
 
 /* --- Footer Styles --- */
-.footer-col-wrapper {
+.footer-content {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 15px;
 }
 
-.contact-info {
+.contact-info, .version-info {
   display: flex;
   align-items: center;
+  margin: 0 15px;
 }
 
-.contact-label {
+.contact-label, .version-label {
   color: #e0e0e0;
   margin-right: 10px;
   font-size: 1em;
@@ -108,6 +110,11 @@ blockquote {
 
 .social-media-list .username {
   display: none; /* Hide text, show only icons */
+}
+
+.copyright {
+  width: 100%;
+  margin-top: 15px;
 }
 
 .copyright p {
