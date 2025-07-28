@@ -10,7 +10,7 @@ vendor/
 .bundle/
 
 # Dependency versions
-Gemfile.lock
+# Gemfile.lock # 의존성 고정을 위해 이 파일은 커밋에 포함되어야 합니다.
 
 # Log files
 *.log
