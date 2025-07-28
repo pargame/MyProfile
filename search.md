@@ -15,7 +15,7 @@ layout: page
   var sjs = SimpleJekyllSearch({
     searchInput: document.getElementById('search-input'),
     resultsContainer: document.getElementById('results-container'),
-    json: '/search.json',
+    json: '{{ site.baseurl }}/search.json',
     searchResultTemplate: '<li><a href="{url}">{title}</a><span class="search-meta">{meta}</span></li>',
     noResultsText: 'No results found',
     limit: 20,
