@@ -10,10 +10,23 @@
 
   {%- if site.email -%}
   <li>
-    <a href="mailto:{{ site.email }}">
+    <a id="email-link" href="#" title="email">
       <svg class="svg-icon"><use xlink:href="{{ '/assets/minima-social-icons.svg#mail' | relative_url }}"></use></svg>
-      <span class="username email-text">{{ site.email | escape }}</span>
+      <span id="email-text" class="username email-text"></span>
     </a>
+    <script>
+      // 이메일 주소를 분리하여 변수에 저장
+      var user = "{{ site.email | split: '@' | first }}";
+      var domain = "{{ site.email | split: '@' | last }}";
+      var emailAddress = user + "@" + domain;
+
+      // 이메일 링크(mailto)와 텍스트를 동적으로 설정
+      var emailLink = document.getElementById("email-link");
+      var emailText = document.getElementById("email-text");
+      
+      emailLink.href = "mailto:" + emailAddress;
+      emailText.textContent = emailAddress;
+    </script>
   </li>
   {%- endif -%}
 </ul>
