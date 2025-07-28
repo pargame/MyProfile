@@ -12,12 +12,45 @@
 
 ---
 
-## 🚀 로컬에서 실행하기
+## 🚀 시작하기: 나만의 블로그 만들기
 
-1.  **저장소 복제:** `git clone https://github.com/pargame/MyProfile.git && cd MyProfile`
-2.  **의존성 설치:** `bundle install`
-3.  **로컬 서버 실행:** `bundle exec jekyll serve`
-    *   서버는 `http://127.0.0.1:4000` 주소로 열립니다.
+이 템플릿은 macOS, Windows, Linux 등 다양한 운영체제에서 동작합니다. 아래 가이드를 따라 당신만의 블로그를 만들어보세요.
+
+### 1. 준비 사항 (Prerequisites)
+
+먼저, 당신의 컴퓨터에 Ruby와 Bundler가 설치되어 있어야 합니다. 설치되어 있지 않다면, 아래 공식 가이드를 따라 설치를 진행해주세요.
+
+*   **[Jekyll 공식 설치 가이드](https://jekyllrb.com/docs/installation/)** (운영체제에 맞는 방법을 선택하세요)
+
+### 2. 블로그 설정 및 실행
+
+1.  **저장소 복제(Clone):** 이 저장소를 당신의 컴퓨터로 복제합니다.
+    ```bash
+    git clone https://github.com/pargame/MyProfile.git
+    cd MyProfile
+    ```
+
+2.  **의존성 설치:** 프로젝트에 필요한 모든 Jekyll 플러그인과 라이브러리를 설치합니다.
+    ```bash
+    bundle install
+    ```
+
+3.  **로컬 서버 실행:** 아래 명령어로 Jekyll 서버를 실행하여 실시간으로 변경사항을 확인합니다.
+    ```bash
+    bundle exec jekyll serve
+    ```
+    *   서버가 실행되면, 웹 브라우저에서 `http://127.0.0.1:4000` 주소로 접속하여 블로그를 확인할 수 있습니다.
+
+### 3. 나만의 정보로 수정하기 (Customization)
+
+이제 당신의 블로그로 만들기 위해 몇 가지 파일을 수정해야 합니다.
+
+*   **`_config.yml` 파일 열기:**
+    *   `title`, `email`, `description`, `github_username` 등의 값을 당신의 정보로 변경하세요.
+*   **`about.md` 파일 수정:**
+    *   자신을 소개하는 내용을 자유롭게 작성하세요.
+*   **기존 콘텐츠 삭제 또는 수정:**
+    *   `_articles`, `_studies`, `_projects` 폴더에 있는 예시 파일들을 삭제하거나, 형식을 참고하여 당신만의 콘텐츠로 채워나가세요.
 
 ---
 
