@@ -23,7 +23,7 @@ layout: page
           {%- if item.author -%}
             <span class="post-meta">by {{ item.author }}</span>
           {%- endif -%}
-          <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+          <p>{{ item.content | strip_html }}</p>
         </li>
       {% endfor %}
     </ul>

@@ -134,3 +134,14 @@ blockquote {
   font-size: 0.9em;
   color: #a0a0a0;
 }
+
+/* --- Study/Project List Preview Truncation --- */
+.post-list p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0;
+  color: #ccc;
+}
