@@ -9,7 +9,7 @@ github_username: pargame
 # To enable comments, create an account at https://disqus.com/ and enter your "shortname" here.
 # For example: shortname: my-awesome-blog
 disqus:
-  shortname:
+  shortname: your-disqus-shortname-goes-here # <--- 중요: 실제 댓글 기능을 사용하려면 이 값을 당신의 Disqus shortname으로 바꾸세요.
 
 # Build settings
 theme: minima
