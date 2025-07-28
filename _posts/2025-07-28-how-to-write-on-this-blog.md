@@ -1,5 +1,4 @@
 ---
-layout: post
 title:  "이 블로그에 글을 작성하는 방법 (콘텐츠 관리 가이드)"
 date:   2025-07-28 15:00:00 +0900
 categories: guide
@@ -44,7 +43,6 @@ tags:
 
 ```yaml
 ---
-layout: post
 title:  "여기에 포스트 제목을 입력하세요"
 date:   2025-08-01 10:00:00 +0900
 categories: tech # 카테고리는 하나만 지정하는 것을 권장합니다.
