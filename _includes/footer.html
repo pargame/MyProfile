@@ -1,8 +1,15 @@
 <footer class="site-footer">
   <div class="wrapper">
-    <h3 class="footer-contact-heading">Contact</h3>
-    <div class="social-links">
-      {%- include social.html -%}
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <!-- RSS link removed for better user experience -->
+        </p>
+        <p class="contact-info">
+          <span class="contact-label">Contact:</span>
+          {%- include social.html -%}
+        </p>
+      </div>
     </div>
     <div class="copyright">
       <p>&copy; {{ "now" | date: "%Y" }} {{ site.author | default: site.title }}. All rights reserved.</p>

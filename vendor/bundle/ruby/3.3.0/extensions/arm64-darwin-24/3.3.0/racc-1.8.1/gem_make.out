@@ -1,0 +1,18 @@
+current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/racc-1.8.1/ext/racc/cparse
+/Users/pargamer/.rbenv/versions/3.3.3/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250728-66052-eeshjf sitelibdir\=./.gem.20250728-66052-eeshjf clean
+
+current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250728-66052-eeshjf sitelibdir\=./.gem.20250728-66052-eeshjf
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+
+current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250728-66052-eeshjf sitelibdir\=./.gem.20250728-66052-eeshjf install
+/usr/bin/install -c -m 0755 cparse.bundle ./.gem.20250728-66052-eeshjf/racc
+
+current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/racc-1.8.1/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20250728-66052-eeshjf sitelibdir\=./.gem.20250728-66052-eeshjf clean
