@@ -56,7 +56,7 @@ The sections below provide a quick reference.
     (Your post content, written in Markdown, goes here...)
     ```
 
-    *   **`layout`**: Should always be `post`.
+    *   **`layout`**: Should always be `post`. (This is now automatically applied via `_config.yml` for `_posts`.)
     *   **`title`**: The title of your post.
     *   **`date`**: The publication date and time.
     *   **`categories`**: The main category of the post.
@@ -103,7 +103,7 @@ This site displays the latest Git commit ID in the footer to indicate the curren
 
 The `_data/version.yml` file contains a `commit_id` field. The `_includes/footer.html` file reads this `commit_id` and displays it.
 
-### Updating the Version
+### Updating the Commit ID
 
 To ensure the footer displays the most recent commit ID, you need to run the `update_version.sh` script:
 
@@ -115,8 +115,23 @@ This script automatically fetches the short hash of the latest Git commit and up
 
 **Important:**
 
-*   Run this script **before** building your site (`bundle exec jekyll build`) or serving it locally (`bundle exec jekyll serve`) to ensure the version displayed is up-to-date.
+*   Run this script **before** building your site (`bundle exec jekyll build`) or serving it locally (`bundle exec jekyll serve`) to ensure the commit ID displayed is up-to-date.
 *   If you want the latest commit ID to be reflected in your deployed site, make sure to run this script and commit the updated `_data/version.yml` file before pushing your changes.
+
+### Updating the Version Number (e.g., v1.0, v1.1)
+
+The human-readable version number (e.g., `v1.0`, `v1.1`) displayed in the footer is **not** automatically updated by the `update_version.sh` script. This number needs to be updated manually.
+
+To change the version number:
+
+1.  Open the `_includes/footer.html` file.
+2.  Locate the line similar to:
+    ```html
+    <span class="version-label">v1.0 (commit: {{ site.data.version.commit }})</span>
+    ```
+3.  Manually edit `v1.0` to your desired version number (e.g., `v1.1`).
+4.  Save the file.
+5.  Commit this change to your repository.
 
 ---
 
