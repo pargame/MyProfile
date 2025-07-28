@@ -1,44 +1,32 @@
+# -----------------------------------------------------------------------------
+# Site Settings
+# -----------------------------------------------------------------------------
+# 사이트의 제목, 설명, 저자 등 기본적인 정보를 설정합니다.
+
 title: Pargame
 email: 001201parg@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-
-# twitter_username: jekyllrb
+description: >- # ">-"는 여러 줄의 설명을 한 줄로 이어줍니다.
+  A personal blog and portfolio for Pargame,
+  documenting studies and projects.
 github_username: pargame
+version: 1.2.0 # 사이트 버전 (푸터에 표시됨)
 
-# Build settings
+# -----------------------------------------------------------------------------
+# Build Settings
+# -----------------------------------------------------------------------------
+# Jekyll 빌드 방식과 관련된 설정을 합니다.
+
 theme: minima
 minima:
-  skin: dark
+  skin: dark # Minima 테마의 다크 모드 스킨을 사용합니다.
 
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-lazy-load-image
 
-header_pages:
-  - about.md
-  - studies.md
-  - projects.md
-  - categories.md
-  - tags.md
-  - search.md
-
-collections:
-  studies:
-    output: true
-    permalink: /studies/:path/
-  projects:
-    output: true
-    permalink: /projects/:path/
-
 # Exclude from processing.
-# The following items will not be processed, by default.
-# Any item listed under the `exclude:` key here will be automatically added to
-# the internal "default list".
-#
-# Excluded items can be processed by explicitly listing the directories or
-# files' path in the `include:` list.
-#
+# 빌드 시 제외할 파일 및 폴더 목록입니다.
 exclude:
   - .sass-cache/
   - .jekyll-cache/
@@ -50,15 +38,36 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  - README.md
+  - .gitignore
 
-# Markdown Processing
-markdown: kramdown
-kramdown:
-  input: GFM
-  hard_wrap: false
-  syntax_highlighter: rouge
+# -----------------------------------------------------------------------------
+# Content Settings
+# -----------------------------------------------------------------------------
+# 콘텐츠 처리 방식과 관련된 설정을 합니다.
+
+# Header navigation pages
+# 헤더에 표시될 페이지 목록입니다.
+header_pages:
+  - about.md
+  - studies.md
+  - projects.md
+  - categories.md
+  - tags.md
+  - search.md
+
+# Collections
+# 'studies'와 'projects'를 컬렉션으로 정의하여 관리합니다.
+collections:
+  studies:
+    output: true
+    permalink: /studies/:path/
+  projects:
+    output: true
+    permalink: /projects/:path/
 
 # Defaults for specific paths
+# 특정 타입의 문서에 레이아웃 등 기본값을 자동으로 설정합니다.
 defaults:
   -
     scope:
@@ -78,4 +87,11 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-\n# Site Version\nversion: 1.2.0
+
+# Markdown Processing
+# 마크다운 렌더링 엔진(kramdown)과 관련된 설정을 합니다.
+markdown: kramdown
+kramdown:
+  input: GFM # GitHub Flavored Markdown 활성화
+  hard_wrap: false
+  syntax_highlighter: rouge # 코드 구문 강조
