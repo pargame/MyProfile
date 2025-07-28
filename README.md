@@ -18,8 +18,14 @@ To run the site locally, you'll need to have Ruby and Bundler installed.
     bundle install
     ```
 
-3.  **Run the local server:**
-    This command will build the site and start a local server at `http://localhost:4000`. The site will automatically rebuild when you make changes to the files.
+3.  **Build the site (if needed):**
+    After making significant configuration changes (e.g., `_config.yml`), or if you encounter issues with `jekyll serve`, you might need to explicitly build the site first.
+    ```bash
+    bundle exec jekyll build
+    ```
+
+4.  **Run the local server:**
+    This command will build the site (if not already built) and start a local server at `http://localhost:4000`. The site will automatically rebuild when you make changes to the files.
     ```bash
     bundle exec jekyll serve --port 4000
     ```
@@ -103,35 +109,25 @@ This site displays the latest Git commit ID in the footer to indicate the curren
 
 The `_data/version.yml` file contains a `commit_id` field. The `_includes/footer.html` file reads this `commit_id` and displays it.
 
-### Updating the Commit ID
+### Updating the Version (Commit ID & Version Number)
 
-To ensure the footer displays the most recent commit ID, you need to run the `update_version.sh` script:
+To update both the Git commit ID and the human-readable version number (e.g., `v1.3`) in the footer, use the `update_version.sh` script:
 
 ```bash
-./update_version.sh
+./update_version.sh "X.Y"
 ```
 
-This script automatically fetches the short hash of the latest Git commit and updates `_data/version.yml`.
+Replace `"X.Y"` with your desired version number (e.g., `"1.3"`).
+
+This script automatically performs the following:
+
+1.  Fetches the short hash of the latest Git commit and updates the `commit_id` in `_data/version.yml`.
+2.  Updates the version number (e.g., `v1.0` to `v1.3`) in `_includes/footer.html`.
 
 **Important:**
 
-*   Run this script **before** building your site (`bundle exec jekyll build`) or serving it locally (`bundle exec jekyll serve`) to ensure the commit ID displayed is up-to-date.
-*   If you want the latest commit ID to be reflected in your deployed site, make sure to run this script and commit the updated `_data/version.yml` file before pushing your changes.
-
-### Updating the Version Number (e.g., v1.0, v1.1)
-
-The human-readable version number (e.g., `v1.0`, `v1.1`) displayed in the footer is **not** automatically updated by the `update_version.sh` script. This number needs to be updated manually.
-
-To change the version number:
-
-1.  Open the `_includes/footer.html` file.
-2.  Locate the line similar to:
-    ```html
-    <span class="version-label">v1.0 (commit: {{ site.data.version.commit }})</span>
-    ```
-3.  Manually edit `v1.0` to your desired version number (e.g., `v1.1`).
-4.  Save the file.
-5.  Commit this change to your repository.
+*   Run this script **before** building your site (`bundle exec jekyll build`) or serving it locally (`bundle exec jekyll serve`) to ensure the version displayed is up-to-date.
+*   If you want the latest version to be reflected in your deployed site, make sure to run this script and commit the updated `_data/version.yml` and `_includes/footer.html` files before pushing your changes.
 
 ---
 
