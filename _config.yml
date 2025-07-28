@@ -55,3 +55,18 @@ kramdown:
   input: GFM
   hard_wrap: false
   syntax_highlighter: rouge
+
+# Defaults for specific paths
+defaults:
+  -
+    scope:
+      path: ""
+      type: "studies"
+    values:
+      layout: "page"
+  -
+    scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "page"

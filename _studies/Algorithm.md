@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Algorithm
 ---
 # 알고리즘 (Algorithm)

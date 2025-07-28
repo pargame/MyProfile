@@ -1,5 +1,4 @@
 ---
-layout: page
 title: AI
 ---
 # 인공지능 (AI)

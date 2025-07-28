@@ -1,5 +1,4 @@
 ---
-layout: page
 title: AI Python
 ---
 # AI 파이썬 실습 (AI_Python)

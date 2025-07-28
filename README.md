@@ -30,6 +30,10 @@ To run the site locally, you'll need to have Ruby and Bundler installed.
 
 This blog is designed for easy content creation and management.
 
+**For a comprehensive guide on how to write posts, studies, projects, and how to add images, please see the [Content Management Guide Post](./_posts/2025-07-28-how-to-write-on-this-blog.md).**
+
+The sections below provide a quick reference.
+
 ### How to Write a New Blog Post
 
 1.  **Create a new file** in the `_posts` directory.
@@ -69,7 +73,6 @@ Each file should have simple Front Matter like this:
 
 ```yaml
 ---
-layout: page
 title: "Title of Your Study/Project"
 ---
 
@@ -89,3 +92,52 @@ Most global settings for the site are located in the `_config.yml` file. This in
 *   `disqus.shortname`: Your Disqus shortname to enable comments. Leave it blank to disable them.
 
 Any changes to `_config.yml` require you to restart the Jekyll server to take effect.
+
+---
+
+## 🖥️ Managing the Local Server
+
+Here’s how to start and stop the local server for previewing your site.
+
+### Starting the Server (Foreground Mode)
+
+This is the standard and recommended way to run the server.
+
+1.  **Run the command:**
+    ```bash
+    bundle exec jekyll serve
+    ```
+2.  **Preview the site:** Open your web browser and go to `http://127.0.0.1:4000`.
+3.  **Stopping the server:** The server will keep running and occupy your terminal window. To stop it, go back to the terminal window and press **`Ctrl + C`**.
+
+### Starting the Server (Background Mode - Advanced)
+
+If you want to use the terminal for other commands while the server is running, you can start it in the background.
+
+1.  **Run the command with `&`:**
+    ```bash
+    bundle exec jekyll serve &
+    ```
+    The `&` at the end tells the terminal to run the process in the background.
+
+2.  **Stopping the background server:**
+    Since the server is running in the background, you need to find its Process ID (PID) to stop it.
+
+    *   **Find the PID:**
+        ```bash
+        ps aux | grep jekyll
+        ```
+        This will show you a line containing `bundle exec jekyll serve`. The number in the second column is the PID. (Ignore the line that says `grep jekyll`).
+
+    *   **Stop the process using the PID:**
+        ```bash
+        kill PID_NUMBER
+        ```
+        Replace `PID_NUMBER` with the actual number you found. For example, if the PID is `78901`, the command would be `kill 78901`. This sends a graceful shutdown signal.
+        If that doesn't work, you can force it to stop with:
+        ```bash
+        kill -9 PID_NUMBER
+        ```
+
+    > **💡 Tip: The `grep` command itself!**
+    > When you run `ps aux | grep jekyll`, you will almost always see a line containing `grep jekyll`. This is not the server! This is the `grep` command itself, which found itself in the process list. If you only see this line, it means the Jekyll server is **not** running.

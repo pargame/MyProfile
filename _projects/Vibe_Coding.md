@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Vibe Coding
 ---
 # Gemini와 함께하는 코딩 (Vibe_Coding)

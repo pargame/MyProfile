@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Project Sprint
 ---
 # 팀 스프린트 언리얼 프로젝트 (Project_Sprint)
