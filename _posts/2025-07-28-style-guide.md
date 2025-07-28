@@ -3,6 +3,10 @@ layout: post
 title:  "콘텐츠 작성 가이드 (마크다운 예시)"
 date:   2025-07-28 11:00:00 +0900
 categories: guide
+tags:
+  - Jekyll
+  - Markdown
+  - guide
 ---
 
 이 페이지는 Jekyll 블로그에 글을 작성할 때 사용할 수 있는 마크다운(Markdown) 문법의 예시입니다. 이 파일을 복사하여 새 글을 작성하시면 편리합니다.
@@ -80,6 +84,25 @@ int main() {
 def hello():
     print("Hello, Python!")
 ```
+
+---
+
+### 태그 (Tags)
+
+게시물에 카테고리보다 더 세부적인 키워드를 부여하고 싶을 때 태그를 사용합니다. YAML Front Matter에 다음과 같이 `tags` 목록을 추가할 수 있습니다.
+
+```yaml
+---
+layout: post
+title: "My First Post"
+tags:
+  - C++
+  - Algorithm
+  - "Problem Solving"
+---
+```
+
+하나의 게시물에 여러 개의 태그를 붙일 수 있으며, 태그에 공백이 포함될 경우 따옴표로 감싸주세요.
 
 ---
 

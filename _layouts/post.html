@@ -20,6 +20,13 @@ layout: default
           {%- unless forloop.last -%},&nbsp;{%- endunless -%}
         {%- endfor -%}
       {%- endif -%}
+      {%- if page.tags.size > 0 -%}
+        • Tags:
+        {%- for tag in page.tags -%}
+          <a href="{{ site.baseurl }}/tag/{{ tag | slugify }}/">#{{ tag }}</a>
+          {%- unless forloop.last -%},&nbsp;{%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
       </p>
   </header>
 

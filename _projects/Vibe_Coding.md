@@ -2,6 +2,6 @@
 layout: page
 title: Vibe Coding
 ---
-Gemini 1.5 Pro 모델과 함께하는 개발 기록을 담습니다.
+# Gemini와 함께하는 코딩 (Vibe_Coding)
 
-(상세 내용은 여기에 작성될 예정입니다.)
+코딩 테스트 문제 풀이 및 해설 모음입니다.

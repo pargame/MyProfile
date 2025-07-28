@@ -17,12 +17,14 @@ minima:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 header_pages:
   - about.md
   - studies.md
   - projects.md
   - categories.md
+  - tags.md
 
 collections:
   studies:
