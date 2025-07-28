@@ -19,3 +19,7 @@ gem "jekyll-search", group: :jekyll_plugins
 
 # Minima 테마는 gem 형태로 제공됩니다.
 gem "minima", "~> 2.5"
+
+# Ruby 3.4.0 이상에서 발생하는 경고 해결
+gem "base64"
+gem "bigdecimal"
