@@ -5,23 +5,15 @@ description: >- # this means to ignore newlines until "baseurl:"
 # twitter_username: jekyllrb
 github_username: pargame
 
-# Comment system (Disqus)
-# To enable comments, create an account at https://disqus.com/ and enter your "shortname" here.
-# For example: shortname: my-awesome-blog
-disqus:
-  shortname: your-disqus-shortname-goes-here # <--- 중요: 실제 댓글 기능을 사용하려면 이 값을 당신의 Disqus shortname으로 바꾸세요.
-
 # Build settings
 theme: minima
 minima:
   skin: dark
 
 plugins:
-  - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-lazy-load-image
-  - simple-jekyll-search
 
 header_pages:
   - about.md

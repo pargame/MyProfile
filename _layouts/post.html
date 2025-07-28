@@ -34,13 +34,5 @@ layout: default
     {{ content }}
   </div>
 
-  {%- if site.disqus.shortname -%}
-    {%- include disqus_comments.html -%}
-  {%- else -%}
-  <div class="comment-notice">
-    <p><em>Comments are disabled. To enable them, please configure your Disqus shortname in the `_config.yml` file.</em></p>
-  </div>
-  {%- endif -%}
-
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>

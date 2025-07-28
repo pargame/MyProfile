@@ -6,33 +6,32 @@
 
 ### **1. 프로젝트 정보**
 
-*   **프로젝트명**: Pargame's Blog (v1.0.1)
+*   **프로젝트명**: Pargame's Blog (v1.1.0)
 *   **저자**: pargame
 *   **GitHub 저장소**: `https://github.com/pargame/MyProfile`
-*   **목표**: Jekyll 기반의 안정적이고 최적화된 개인 포트폴리오 및 블로그 구축.
+*   **목표**: Jekyll 기반의 안정적이고 최적화된 **개인용** 포트폴리오 및 블로그 구축.
 
 ---
 
-### **2. v1.0.1 최종 기능 및 상태 (2025-07-28)**
+### **2. v1.1.0 최종 기능 및 상태 (2025-07-28)**
+
+*   **핵심 변경사항 (개인용 전환)**:
+    *   **댓글 기능 제거**: 개인적인 용도로만 사용하기 위해 **Disqus** 댓글 기능을 완전히 제거했습니다. 관련 설정, 코드, HTML 파일, CSS 스타일이 모두 삭제되었습니다.
+    *   **구독 기능 제거**: **RSS 구독 기능(`jekyll-feed`)**을 완전히 제거하여 블로그의 복잡성을 줄이고 개인적인 목적에 집중하도록 했습니다.
 
 *   **빌드 시스템**:
-    *   **의존성 문제 해결**: `kramdown-parser-gfm` gem을 추가하여 로컬 서버 빌드 오류를 완벽히 해결함.
-    *   **플러그인**: `jekyll-feed`, `jekyll-seo-tag`, `jekyll-sitemap`, `jekyll-lazy-load-image`, `simple-jekyll-search` 플러그인이 모두 정상적으로 설정 및 동작함.
+    *   **의존성 문제 해결**: `bundle install`을 통해 모든 의존성 문제를 해결하고, 로컬 서버가 정상적으로 실행되도록 복구했습니다.
+    *   **플러그인**: `jekyll-seo-tag`, `jekyll-sitemap`, `jekyll-lazy-load-image`, `jekyll-search` 플러그인이 정상적으로 설정 및 동작합니다.
 
 *   **디자인 및 레이아웃**:
     *   **사이트 타이틀**: `_config.yml`의 `title`을 **Pargame**으로 변경하여 사이트 정체성 확립.
-    *   **푸터**: 'Contact' 레이블 옆에 이메일 주소는 텍스트로, GitHub는 아이콘으로 명확히 표시되도록 `social.html`과 `custom.css`를 최종 수정.
-    *   **RSS 링크 제거**: `home.html` 레이아웃 하단의 'via RSS' 링크를 완전히 제거하여 사용자 혼란 방지.
+    *   **푸터**: 'Contact' 레이블 옆에 이메일 주소는 텍스트로, GitHub는 아이콘으로 명확히 표시됩니다.
 
 *   **주요 기능**:
     *   **탐색 시스템**: 카테고리, 태그별 아카이브 페이지 완벽 구축.
-    *   **검색**: **Simple-Jekyll-Search**를 이용한 클라이언트 사이드 검색 기능 구현 완료. 상단 네비게이션의 'Search' 메뉴를 통해 접근 가능. (`/search.md`)
+    *   **검색**: **jekyll-search**를 이용한 클라이언트 사이드 검색 기능이 정상적으로 동작합니다.
     *   **성능 최적화**: **jekyll-lazy-load-image** 플러그인을 적용하여 모든 이미지에 지연 로딩(Lazy Loading)이 자동으로 활성화됨.
-    *   **댓글 시스템**: **Disqus** 댓글 창이 기본적으로 보이도록 `_config.yml`에 예시 `shortname`을 추가. 사용자가 실제 값으로 교체하도록 명확한 주석 안내를 추가하여 기능의 가시성과 사용성을 대폭 개선.
-    *   **버전 관리**: Git 커밋 해시를 푸터에 `v1.0 (commit: xxxxxx)` 형태로 자동 표시하여 버전 추적이 가능하도록 구현. (`_data/version.yml` 활용)
-
-*   **사용자 경험 (UX)**:
-    *   **README**: 프로젝트 실행, 새 게시물 작성법, 검색 기능 사용법 등을 포함한 상세한 사용자 가이드로 전면 개편함.
+    *   **버전 관리**: Git 커밋 해시를 푸터에 `v1.0 (commit: xxxxxx)` 형태로 자동 표시하여 버전 추적이 가능하도록 구현.
 
 ---
 
@@ -52,19 +51,11 @@
 
 ```
 MyProfile/
-├── _config.yml         # (중요) Jekyll 사이트 전역 설정 (타이틀, 플러그인, Disqus 예시 추가)
+├── _config.yml         # (중요) Jekyll 사이트 전역 설정 (댓글, 구독 기능 제거)
+├── Gemfile             # (중요) Gem 의존성 목록 (댓글, 구독 gem 제거)
 ├── .gemini/
 │   └── gemini.md       # (이 파일) Gemini 작업 기록 및 규칙
-├── _data/
-│   └── version.yml     # 버전 정보 (커밋 해시)
-├── _includes/
-│   ├── footer.html     # (중요) 수정된 푸터
-│   └── post.html       # (중요) 댓글 기능 안내 추가
 ├── _layouts/
-│   └── home.html       # (중요) RSS 링크 제거
-├── assets/
-│   └── css/custom.css  # 커스텀 푸터 CSS
-├── search.json         # 검색 데이터 파일
-├── search.md           # 검색 페이지
-└── README.md           # (중요) 상세한 사용자 가이드
+│   └── post.html       # (중요) 댓글 코드 제거
+└── ...
 ```
