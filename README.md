@@ -95,6 +95,31 @@ Any changes to `_config.yml` require you to restart the Jekyll server to take ef
 
 ---
 
+## ✨ Version Management
+
+This site displays the latest Git commit ID in the footer to indicate the current version of the deployed code. This is managed by the `_data/version.yml` file.
+
+### How it Works
+
+The `_data/version.yml` file contains a `commit_id` field. The `_includes/footer.html` file reads this `commit_id` and displays it.
+
+### Updating the Version
+
+To ensure the footer displays the most recent commit ID, you need to run the `update_version.sh` script:
+
+```bash
+./update_version.sh
+```
+
+This script automatically fetches the short hash of the latest Git commit and updates `_data/version.yml`.
+
+**Important:**
+
+*   Run this script **before** building your site (`bundle exec jekyll build`) or serving it locally (`bundle exec jekyll serve`) to ensure the version displayed is up-to-date.
+*   If you want the latest commit ID to be reflected in your deployed site, make sure to run this script and commit the updated `_data/version.yml` file before pushing your changes.
+
+---
+
 ## 🖥️ Managing the Local Server
 
 Here’s how to start and stop the local server for previewing your site.
