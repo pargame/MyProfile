@@ -59,3 +59,37 @@ MyProfile/
 │   └── post.html       # (중요) 댓글 코드 제거
 └── ...
 ```
+
+---
+
+### **5. Studies 페이지 및 콘텐츠 관리**
+
+`studies.md` 페이지는 이제 개별 스터디 페이지를 직접 나열하는 대신, **주제별 분류(카테고리)를 접기 목록 형태로 표시**합니다. 각 분류 목록 아래에는 해당 분류에 속하는 실제 스터디 페이지들이 나열됩니다.
+
+**새로운 스터디 추가 방법:**
+
+1.  **분류 폴더 생성**: `_studies/` 디렉토리 안에 원하는 분류명으로 폴더를 생성합니다.
+    *   예: `_studies/NewCategory/`
+    *   폴더명은 URL에 사용되므로, 소문자로 작성하고 띄어쓰기 대신 하이픈(`-`)을 사용하는 것을 권장합니다. (예: `unreal-engine`, `data-structures`)
+2.  **스터디 파일 생성**: 생성한 분류 폴더 안에 `.md` 파일을 생성합니다.
+    *   예: `_studies/NewCategory/MyNewStudy.md`
+3.  **프론트 매터 작성**: 스터디 파일 상단에 `title`을 포함한 프론트 매터를 작성합니다. `layout`은 `_config.yml` 설정에 따라 자동으로 `page`가 적용됩니다.
+    ```yaml
+    ---
+    title: "새로운 스터디 제목"
+    ---
+
+    여기에 스터디 내용을 작성하세요.
+    ```
+4.  **자동 분류**: `_studies/분류명/` 폴더 구조에 따라 `studies.md` 페이지에서 해당 스터디가 자동으로 해당 분류의 접기 목록 아래에 나타납니다.
+
+**기존 분류 `.md` 파일 처리:**
+
+*   이전에는 `_studies/AI.md`, `_studies/Algorithm.md` 등 최상위 `.md` 파일들이 개별 스터디 페이지로 사용되었습니다.
+*   이제 이 파일들은 **분류 역할**을 하므로, 실제 페이지가 아닌 **삭제**되었습니다.
+*   해당 분류에 속하는 스터디는 `_studies/분류명/스터디제목.md` 형태로 생성해야 합니다.
+
+**Jekyll URL 및 표시:**
+
+*   `_config.yml`의 `permalink: /studies/:path/` 설정 덕분에, `_studies/UnrealEngine/ReflectionSystem.md`와 같은 파일은 `/studies/unrealengine/reflectionsystem/`과 같은 올바른 URL로 접근됩니다.
+*   `studies.md` 페이지에서는 `UnrealEngine` 분류가 기본적으로 열려있도록 설정되어 있습니다.

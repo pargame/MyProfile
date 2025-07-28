@@ -11,7 +11,7 @@ layout: page
   {% assign group_name_raw = group.name %}
   {% assign display_group_name = group_name_raw | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
 
-  <details {% if group_name_raw == "UnrealEngine" %}open{% endif %}>
+  <details{% if group_name_raw == "UnrealEngine" %} open{% endif %}>
     <summary>
       <h3>{{ display_group_name }}</h3>
     </summary>
