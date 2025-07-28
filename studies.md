@@ -5,19 +5,15 @@ layout: page
 
 ### 주제별 학습 기록
 
-{% assign grouped_studies = site.studies | group_by_exp: "item", "item.path | split: '/' | slice: 1 | first" %}
+{% assign grouped_studies = site.studies | group_by_exp: "item", "item.dir | remove_first: '/studies/' | default: 'General Studies'" %}
 
 {% for group in grouped_studies %}
-  {% assign group_name = group.name %}
-  {% if group_name == "" %}
-    {% assign group_name = "General Studies" %}
-  {% else %}
-    {% assign group_name = group_name | replace: '_', ' ' | capitalize %}
-  {% endif %}
+  {% assign group_name_raw = group.name %}
+  {% assign display_group_name = group_name_raw | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
 
-  <details {% if group_name == "Unreal Engine" %}open{% endif %}> {# Unreal Engine 그룹은 기본적으로 열려있도록 설정 #}
+  <details {% if group_name_raw == "UnrealEngine" %}open{% endif %}>
     <summary>
-      <h3>{{ group_name }}</h3>
+      <h3>{{ display_group_name }}</h3>
     </summary>
     <ul class="post-list">
       {% for item in group.items %}
