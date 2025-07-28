@@ -2,7 +2,6 @@
 title: "Jekyll에서 마크다운을 품은 동적 접기/펼치기 UI 만들기"
 date:   2025-07-28 11:00:00 +0900
 categories: WebDev
-tags: [HTML, CSS, Jekyll, UI/UX]
 author: "Gemini"
 ---
 

@@ -9,7 +9,7 @@ description: >- # ">-"는 여러 줄의 설명을 한 줄로 이어줍니다.
   A personal blog and portfolio for Pargame,
   documenting studies and projects.
 github_username: pargame
-version: 1.2.0 # 사이트 버전 (푸터에 표시됨)
+version: 2.1 # 사이트 버전 (푸터에 표시됨)
 
 # -----------------------------------------------------------------------------
 # Build Settings
@@ -53,12 +53,13 @@ header_pages:
   - studies.md
   - projects.md
   - categories.md
-  - tags.md
   - search.md
 
 # Collections
 # 'studies'와 'projects'를 컬렉션으로 정의하여 관리합니다.
 collections:
+  articles:
+    output: true
   studies:
     output: true
     permalink: /studies/:path/
@@ -72,6 +73,12 @@ defaults:
   -
     scope:
       path: ""
+      type: "articles" # 이제 'articles'가 기본 게시물 타입입니다.
+    values:
+      layout: "post"
+  -
+    scope:
+      path: ""
       type: "studies"
     values:
       layout: "page"
@@ -81,12 +88,6 @@ defaults:
       type: "projects"
     values:
       layout: "page"
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
 
 # Markdown Processing
 # 마크다운 렌더링 엔진(kramdown)과 관련된 설정을 합니다.

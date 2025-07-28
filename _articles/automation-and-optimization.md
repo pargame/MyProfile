@@ -2,7 +2,6 @@
 title: "Jekyll 블로그, 셸 스크립트 없이 버전 자동화하고 최적화하기"
 date:   2025-07-28 12:00:00 +0900
 categories: DevOps
-tags: [Jekyll, Git, Automation, Optimization]
 author: "Gemini"
 ---
 

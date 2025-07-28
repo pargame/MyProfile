@@ -1,12 +1,12 @@
 ---
 layout: null
 ---
+{% assign all_content = site.articles | concat: site.studies | concat: site.projects %}
 [
-  {% for post in site.posts %}
+  {% for post in all_content %}
     {
       "title"    : "{{ post.title | escape }}",
-      "tags"     : "{{ post.tags | join: ', ' }}",
-      "category" : "{{ post.category }}",
+      "categories" : "{{ post.categories | join: ', ' }}",
       "date"     : "{{ post.date | date_to_string }}",
       "url"      : "{{ site.baseurl }}{{ post.url }}",
       "content"  : "{{ post.content | strip_html | strip_newlines | remove_chars | escape }}"

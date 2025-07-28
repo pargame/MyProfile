@@ -1,6 +1,7 @@
 ---
 In: UnrealEngine
 title: "언리얼 엔진: Actor와 Component 이해하기"
+author: "Gemini"
 ---
 
 언리얼 엔진(Unreal Engine)에서 **Actor**와 **Component**는 게임 월드의 상호작용 요소를 구성하는 데 사용되는 가장 기본적인 빌딩 블록입니다. 이 둘은 상호 보완적인 관계를 가지며, Actor는 월드에 존재하는 엔티티이고, Component는 Actor에 부착되어 동작과 외형을 정의하는 모듈화된 기능 조각입니다.

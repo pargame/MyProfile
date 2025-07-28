@@ -20,6 +20,9 @@ layout: page
               {{ item.title }}
             </a>
           </h4>
+          {%- if item.author -%}
+            <span class="post-meta">by {{ item.author }}</span>
+          {%- endif -%}
           <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
         </li>
       {% endfor %}
