@@ -26,8 +26,10 @@ header_pages:
 collections:
   studies:
     output: true
+    permalink: /studies/:path/
   projects:
     output: true
+    permalink: /projects/:path/
 
 # Exclude from processing.
 # The following items will not be processed, by default.
