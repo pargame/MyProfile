@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Jekyll 블로그 콘텐츠 관리 시스템 개편기"
 date:   2025-07-28 10:00:00 +0900
 categories: Jekyll
