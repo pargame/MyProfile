@@ -5,15 +5,68 @@ layout: page
 
 ### 프로젝트 목록
 
-<ul class="post-list">
-  {% for item in site.projects %}
-    <li>
-      <h3>
-        <a class="post-link" href="{{ item.url | relative_url }}">
-          {{ item.title }}
-        </a>
-      </h3>
-      <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
-    </li>
-  {% endfor %}
-</ul>
+{% assign grouped_projects = site.projects | group_by: "In" | sort: "name" %}
+
+{% for group in grouped_projects %}
+  {% assign group_name = group.name | default: "기타" %}
+  <details>
+    <summary>{{ group_name }}</summary>
+    <ul class="post-list">
+      {% assign items_sorted = group.items | sort: "title" %}
+      {% for item in items_sorted %}
+        <li>
+          <h4>
+            <a class="post-link" href="{{ item.url | relative_url }}">
+              {{ item.title }}
+            </a>
+          </h4>
+          <p>{{ item.content | strip_html | truncatewords: 50 }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </details>
+{% endfor %}
+
+<style>
+  details {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+    margin-bottom: 1em;
+  }
+
+  summary {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+    cursor: pointer;
+  }
+
+  details[open] {
+    padding: 0.5em;
+  }
+
+  details[open] summary {
+    border-bottom: 1px solid #333;
+    margin-bottom: 0.5em;
+  }
+
+  .post-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .post-list li {
+    margin-bottom: 1.5em;
+  }
+
+  .post-list h4 {
+    margin-bottom: 0.2em;
+  }
+
+  .post-list p {
+    margin-top: 0;
+    color: #ccc;
+  }
+</style>

@@ -6,8 +6,9 @@
         {%- include social.html -%}
       </div>
       <div class="version-info">
-        {%- if site.data.version.commit -%}
-          <span class="version-label">v1.2 (commit: {{ site.data.version.commit }})</span>
+        {%- assign commit_hash = site.github.build_revision | slice: 0, 7 -%}
+        {%- if commit_hash and commit_hash != "" -%}
+          <span class="version-label">v{{ site.version }} (commit: {{ commit_hash }})</span>
         {%- endif -%}
       </div>
     </div>

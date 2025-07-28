@@ -5,18 +5,15 @@ layout: page
 
 ### 주제별 학습 기록
 
-{% assign grouped_studies = site.studies | group_by_exp: "item", "item.dir | remove_first: '/studies/' | default: 'General Studies'" %}
+{% assign grouped_studies = site.studies | group_by: "In" | sort: "name" %}
 
 {% for group in grouped_studies %}
-  {% assign group_name_raw = group.name %}
-  {% assign display_group_name = group_name_raw | replace: '-', ' ' | replace: '_', ' ' | capitalize %}
-
-  <details{% if group_name_raw == "UnrealEngine" %} open{% endif %}>
-    <summary>
-      <h3>{{ display_group_name }}</h3>
-    </summary>
+  {% assign group_name = group.name | default: "기타" %}
+  <details>
+    <summary>{{ group_name }}</summary>
     <ul class="post-list">
-      {% for item in group.items %}
+      {% assign items_sorted = group.items | sort: "title" %}
+      {% for item in items_sorted %}
         <li>
           <h4>
             <a class="post-link" href="{{ item.url | relative_url }}">
@@ -29,3 +26,47 @@ layout: page
     </ul>
   </details>
 {% endfor %}
+
+<style>
+  details {
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+    margin-bottom: 1em;
+  }
+
+  summary {
+    font-size: 1.25em;
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+    cursor: pointer;
+  }
+
+  details[open] {
+    padding: 0.5em;
+  }
+
+  details[open] summary {
+    border-bottom: 1px solid #333;
+    margin-bottom: 0.5em;
+  }
+
+  .post-list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .post-list li {
+    margin-bottom: 1.5em;
+  }
+
+  .post-list h4 {
+    margin-bottom: 0.2em;
+  }
+
+  .post-list p {
+    margin-top: 0;
+    color: #ccc;
+  }
+</style>

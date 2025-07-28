@@ -78,3 +78,4 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+\n# Site Version\nversion: 1.2.0

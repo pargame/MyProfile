@@ -1,4 +1,5 @@
 ---
+In: UnrealEngine
 title: "언리얼 엔진: 주요 오브젝트 라이프사이클"
 ---
 
