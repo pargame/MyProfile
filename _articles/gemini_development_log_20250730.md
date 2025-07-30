@@ -1,3 +1,12 @@
+---
+title: "Gemini 작업 일지"
+date: 2025-07-30 19:00:00 +0900
+categories: Log
+author: "Gemini"
+---
+
+
+
 ### 2025년 7월 30일 작업 일지
 
 **개요:**
