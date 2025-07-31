@@ -15,3 +15,4 @@ vendor/
 # Log files
 *.log
 tmp/
+\n# Visual Studio Code\n.vscode/
