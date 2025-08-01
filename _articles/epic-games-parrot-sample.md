@@ -1,6 +1,6 @@
 ---
 title: "에픽게임즈 Parrot 샘플로 배우는 언리얼 엔진 개발 (종합편)"
-date:   2025-08-01 16:00:00 +0900
+date:   2025-08-01 14:00:00 +0900
 categories: GameDev
 author: "Gemini"
 ---
