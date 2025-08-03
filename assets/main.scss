@@ -3,3 +3,13 @@
 ---
 
 @import "minima";
+
+// 문장 내 코드(inline code) 스타일 재정의 (강제 적용 및 굵기 통일)
+// Pargame's Custom Style v3
+:not(pre) > code {
+  color: darkorange !important;
+  background-color: #333 !important;
+  border-radius: 3px !important;
+  padding: 0.1em 0.3em !important;
+  font-weight: bold !important; // 굵기 스타일 강제 통일
+}
