@@ -1,5 +1,5 @@
 ---
-title: "[Unreal] C++과 블루프린트의 완벽한 협업 가이드: Enhanced Input"
+title: "[Unreal] Enhanced Input 심층 분석: 아키텍처와 C++ 헤더의 원리"
 date: 2025-08-03 18:00:00 +0900
 categories: Unreal Engine
 author: "Pargame"
@@ -7,7 +7,7 @@ author: "Pargame"
 
 > 이 포스트는 Gemini 2.5 Pro와 Pargame이 나눈 깊이 있는 대화를 바탕으로 정리한 기술 문서입니다.
 
-언리얼 엔진으로 개발을 하다 보면 C++의 강력한 성능과 블루프린트의 유연함 사이에서 어떻게 균형을 맞춰야 할지 고민하게 됩니다. 특히 플레이어의 입력을 처리하는 시스템은 게임의 핵심이기에 더욱 깊은 이해가 필요합니다. 이 글에서는 언리얼 엔진의 Enhanced Input System을 중심으로, C++과 블루프린트가 어떻게 아름답게 협업하는지 그 원리와 모범 사례를 깊이 있게 파헤쳐 봅니다.
+단순히 C++과 블루프린트를 연결하는 방법을 넘어, 언리얼 엔진의 Enhanced Input System이 어떤 설계 사상으로 만들어졌는지 그 근본을 파헤쳐 봅니다. 이 글에서는 서브시스템 기반의 아키텍처부터 데이터 흐름, 그리고 C++ 헤더 파일에 `#include`와 전방 선언을 사용하는 이유까지, 시스템의 내부 동작 원리를 깊이 있게 분석합니다.
 
 ## 1. 아키텍처의 초석: 서브시스템 (Subsystem)
 
@@ -84,9 +84,43 @@ C++에서 `BindAction()`을 하는 것과 블루프린트 노드를 사용하는
 
 - **`Build.cs` 파일:** `"EnhancedInput"`와 같은 모듈을 `PublicDependencyModuleNames`에 추가하는 것은, 해당 모듈의 헤더와 라이브러리를 프로젝트에서 **사용하기 위한 필수 전제 조건**입니다. 이를 통해 컴파일러와 링커가 필요한 파일을 찾을 수 있게 됩니다.
 - **`#include` vs. 전방 선언:** 헤더 파일(`.h`)에서는 컴파일 시간을 최적화하기 위해 이 둘을 구분해서 사용하는 것이 매우 중요합니다.
-    - **`#include`:** 상속받는 부모 클래스나, 멤버 변수로 완전한 객체를 가질 때처럼 **클래스의 전체 정의(크기, 멤버 등)**가 필요한 경우에만 사용합니다.
     - **전방 선언 (`class ...;`):** 포인터(`*`)나 참조(`&`) 멤버 변수처럼 **타입의 이름**만 알려줘도 충분한 경우에 사용하여 불필요한 의존성을 줄입니다.
+    - **`#include`:** 상속받는 부모 클래스나, 멤버 변수로 완전한 객체를 가질 때처럼 **클래스의 전체 정의(크기, 멤버 등)**가 필요한 경우에 사용합니다. 특히, 함수의 인자로 `FInputActionValue`와 같은 구조체를 값이나 참조로 전달할 때 반드시 필요합니다.
+        - **예시**: `void Move(const FInputActionValue& Value);`와 같은 함수에서 컴파일러는 `Value`의 멤버(예: `Get<FVector2D>()`)에 접근하기 위해 `FInputActionValue`의 완전한 정의를 알아야 합니다. 따라서 이 함수가 선언된 헤더에는 `struct FInputActionValue;` 같은 전방 선언이 아닌, `#include "InputActionValue.h"`를 사용해야 합니다.
 - **`TObjectPtr` 사용:** `UObject`를 가리키는 포인터 멤버 변수를 선언할 때는, 가비지 컬렉션 시 자동으로 `nullptr`로 설정되어 허상 포인터(Dangling Pointer) 문제를 방지하는 `TObjectPtr`을 사용하는 것이 현대 언리얼 C++의 모범 사례입니다.
 
+#### 실전 예시: 캐릭터 헤더 분석
+다음은 일반적인 캐릭터 클래스의 헤더 일부입니다. 위에서 설명한 원칙이 어떻게 적용되었는지 분석해 보겠습니다.
+```cpp
+// Copyright Epic Games, Inc. All Rights Reserved.
 
----
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h" 
+#include "InputActionValue.h"
+#include "AdventureCharacter.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
+class UInputComponent;
+```
+- **`#include "GameFramework/Character.h"`**
+  - **이유**: `AAdventureCharacter`가 `ACharacter`를 **상속**받기 때문입니다. 자식 클래스는 부모 클래스의 모든 멤버와 구조를 알아야 하므로, 완전한 정의를 담은 헤더 파일이 반드시 필요합니다.
+
+- **`#include "EnhancedInputComponent.h"`, `#include "EnhancedInputSubsystems.h"`**
+  - **이유**: `SetupPlayerInputComponent` 함수 내부에서 `UEnhancedInputComponent` 타입으로 캐스팅하고, `BindAction`과 같은 **멤버 함수를 호출**해야 합니다. 또한 `ULocalPlayer`에서 `GetSubsystem`을 통해 `UEnhancedInputLocalPlayerSubsystem`의 **인스턴스를 얻고 사용**해야 합니다. 이처럼 특정 클래스의 멤버에 접근하거나 실제 기능을 사용하려면 완전한 클래스 정의가 필요합니다.
+
+- **`#include "InputActionValue.h"`**
+  - **이유**: `Move(const FInputActionValue& Value)`와 같이, 입력 처리 함수의 **인자로 `FInputActionValue` 구조체를 직접 사용**하기 때문입니다. 컴파일러는 `Value.Get<FVector2D>()`와 같은 멤버 함수를 호출하기 위해 이 구조체의 크기와 메모리 레이아웃, 멤버 함수 등 완전한 정보를 알아야 합니다.
+  - **심층 분석 (구조체 vs. 포인터)**: `FInputActionValue`가 포인터가 아닌 구조체(값 또는 `const` 참조)로 전달되는 이유는 **성능**과 **안전성** 때문입니다. 입력 값은 이벤트가 발생하는 순간에만 유효한 **임시 데이터**입니다. 이를 힙(Heap)에 메모리를 할당하는 포인터로 만들면 불필요한 오버헤드가 발생하고, 해제(delete) 관리의 복잡성이 생깁니다. 구조체를 스택(Stack)에 직접 생성하고 전달하는 방식은 매우 빠르고, 함수 호출 동안 데이터의 유효성을 보장하며, 메모리 누수 위험이 없습니다. 이는 입력 시스템처럼 매 프레임 호출될 수 있는 성능이 중요한 코드에서 매우 효율적인 설계입니다.
+
+- **`class UInputMappingContext;`, `class UInputAction;`, `class UInputComponent;`**
+  - **이유**: 이 클래스들은 모두 헤더 파일(`.h`) 내에서 **포인터**로만 참조됩니다.
+    - `UInputMappingContext`와 `UInputAction`은 `TObjectPtr<...>` 형태의 멤버 변수로 선언될 가능성이 높습니다.
+    - `UInputComponent`는 `SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)` 함수의 **파라미터 타입**으로 사용됩니다.
+  - 이처럼 포인터로만 타입을 참조할 경우, 컴파일러는 해당 타입의 이름만 알면 충분하며 전체 정의는 필요 없습니다. 따라서 컴파일 시간을 단축하고 불필요한 의존성을 줄이기 위해 전방 선언을 사용합니다. 실제 사용은 `.cpp` 파일에서 이루어집니다.
+
+> Enhanced Input System은 데이터(`IA`, `IMC`), 처리(`Subsystem`), 실행(`Component`) 계층을 명확히 분리한 구조입니다. 이 가이드에서 설명된 각 컴포넌트의 역할과 데이터 흐름을 이해하면, C++과 블루프린트를 활용하여 유지보수가 용이하고 확장 가능한 입력 시스템을 설계할 수 있습니다.
