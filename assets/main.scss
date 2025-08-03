@@ -4,12 +4,38 @@
 
 @import "minima";
 
-// 문장 내 코드(inline code) 스타일 재정의 (강제 적용 및 굵기 통일)
-// Pargame's Custom Style v3
+// -----------------------------------------------------------------------------
+// Pargame's Custom Style v9 - 통합 스타일 가이드
+// -----------------------------------------------------------------------------
+
+// 1. 기본 인라인 코드 스타일 (주황색)
+// :not(pre) > code는 <pre> 블록 내부의 코드는 제외하고, 문장 내의 코드에만 스타일을 적용합니다.
 :not(pre) > code {
   color: darkorange !important;
   background-color: #333 !important;
   border-radius: 3px !important;
   padding: 0.1em 0.3em !important;
-  font-weight: bold !important; // 굵기 스타일 강제 통일
+  font-weight: bold !important;
+  font-size: 0.9em !important; // 본문보다 약간 작게 하여 구분
+}
+
+// 2. 인용구(서두/결론) 스타일
+// 기본 테마에서 h3와 크기가 같아 제목처럼 보이는 문제를 해결합니다.
+blockquote {
+  color: $grey-color; // 테마의 기본 회색 사용
+  font-size: 1rem !important; // 본문과 동일한 크기로 설정
+  font-style: italic; // 이탤릭체로 구분
+  border-left: 4px solid $grey-color-light;
+  padding-left: $spacing-unit / 2;
+}
+
+// 3. 소제목(h1-h6) 내부의 코드 스타일
+// 소제목 안의 코드가 작아지는 문제를 해결하고, 부모의 크기를 따르도록 합니다.
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+  font-size: inherit !important; // 부모(소제목)의 폰트 크기를 그대로 상속
 }
