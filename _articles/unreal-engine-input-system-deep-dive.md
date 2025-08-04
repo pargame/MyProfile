@@ -13,12 +13,12 @@ author: "Pargame"
 
 > Enhanced Input System을 이해하려면 먼저 '서브시스템'이라는 개념을 알아야 합니다. 서브시스템은 특정 기능을 독립적인 모듈로 캡슐화하여 코드의 응집도를 높이고 결합도를 낮추는 강력한 아키텍처입니다.
 
-### `UGameInstance`와 `UGameInstanceSubsystem`
+#### `UGameInstance`와 `UGameInstanceSubsystem`
 
 - **`UGameInstance`:** 게임이 시작될 때 단 하나 생성되어 게임이 끝날 때까지 유지되는 최상위 객체입니다. 레벨 전환과 관계없이 지속되어야 하는 데이터와 상태를 관리하는 컨테이너 역할을 합니다.
 - **`UGameInstanceSubsystem`:** `UGameInstance`의 생명주기에 맞춰 자동으로 생성되고 관리되는 기능 관리자입니다. `UGameInstance`에 모든 기능을 구현할 경우 발생하는 '갓 오브젝트(God Object)' 문제를 방지하고, 각 기능을 독립적으로 개발하고 유지보수할 수 있도록 합니다.
 
-### 서브시스템의 생명주기
+#### 서브시스템의 생명주기
 
 > 서브시스템의 가장 큰 장점은 **자동으로 관리되는 생명주기**입니다.
 
@@ -31,21 +31,21 @@ author: "Pargame"
 
 > Enhanced Input System은 명확한 계층 구조와 데이터 흐름을 통해 유연성과 확장성을 확보합니다. 입력이 발생해서 실제 행동으로 이어지기까지의 전체 과정을 이해하는 것이 중요합니다.
 
-### ① 데이터 계층: 입력의 '정의'
+#### 데이터 계층: 입력의 '정의'
 
 > 가장 아래에는 입력이 '무엇'인지를 정의하는 데이터 애셋들이 있습니다.
 
 - **`UInputAction` (IA):** '점프', '이동', '공격'과 같이 추상적인 **입력 행위 자체**를 정의하는 데이터 애셋입니다. 어떤 키에 매핑될지는 신경 쓰지 않고, 오직 이 액션이 어떤 타입의 값(Boolean, Vector2D 등)을 가지는지만 정의합니다.
 - **`UInputMappingContext` (IMC):** **'규칙의 집합'**입니다. 특정 키(`W`, `Spacebar` 등)나 마우스 움직임을 어떤 `UInputAction`에 매핑할지를 결정합니다. 여기에 `Trigger`와 `Modifier`를 추가하여 "키를 꾹 눌렀을 때" 또는 "축 값을 반전시켜서"와 같은 구체적인 조건을 설정할 수 있습니다.
 
-### ② 관리 및 처리 계층: 입력의 '해석'과 '발행'
+#### 관리 및 처리 계층: 입력의 '해석'과 '발행'
 
 > 데이터 계층에서 정의된 내용을 해석하고 처리하는 두뇌 역할을 합니다.
 
 - **`ULocalPlayer`:** 로컬 머신에서 플레이하는 **각 플레이어를 대표하는 객체**입니다. 분할 화면 멀티플레이어의 경우 각 플레이어마다 별도의 `ULocalPlayer` 인스턴스가 존재하며, 플레이어별 설정과 서브시스템을 소유하고 관리하는 최상위 컨텍스트를 제공합니다.
 - **`UEnhancedInputLocalPlayerSubsystem`:** **`ULocalPlayer`가 소유하고 관리하는 서브시스템**입니다. 이 서브시스템이 실질적인 입력 처리의 총괄자입니다. 활성화된 `IMC` 목록을 유지하고, 하드웨어로부터 들어온 원시 입력을 `IMC`의 규칙에 따라 해석하며, 조건이 충족되면 `IA`에 대한 이벤트를 **발행(Broadcast)**합니다.
 
-### ③ 소비 및 실행 계층: 이벤트의 '구독'과 '실행'
+#### 소비 및 실행 계층: 이벤트의 '구독'과 '실행'
 
 > 발행된 이벤트를 받아 실제 행동으로 연결하는 최종 단계입니다.
 
@@ -105,14 +105,14 @@ class UInputAction;
 class UInputComponent;
 ```
 
-### **`#include`가 필요한 경우 (내부 구조를 알아야 함):**
+#### `#include`가 필요한 경우 (내부 구조를 알아야 함):
 
 - **`"GameFramework/Character.h"`**: `AAdventureCharacter`가 `ACharacter`를 **상속**받기 때문에, 부모의 모든 구조를 알아야 합니다.
 - **`"EnhancedInputComponent.h"`, `"EnhancedInputSubsystems.h"`**: `.cpp` 파일에서 `UEnhancedInputComponent`로 캐스팅하고 `BindAction` 같은 **멤버 함수를 호출**하거나, `GetSubsystem`으로 얻은 인스턴스를 **실제로 사용**해야 합니다.
 - **`"InputActionValue.h"`**: `Move(const FInputActionValue& Value)` 함수의 본문에서 `Value.Get<FVector2D>()`처럼 **구조체의 멤버에 접근**해야 합니다. 컴파일러는 멤버에 접근하기 위해 구조체의 완전한 정의를 알아야 하므로, 참조(`&`)로 전달하더라도 `#include`가 필요합니다.
   - **심층 분석 (구조체 vs. 포인터)**: `FInputActionValue`가 포인터가 아닌 구조체(값 또는 `const` 참조)로 전달되는 이유는 **성능**과 **안전성** 때문입니다. 입력 값은 이벤트가 발생하는 순간에만 유효한 **임시 데이터**입니다. 이를 힙(Heap)에 메모리를 할당하는 포인터로 만들면 불필요한 오버헤드가 발생하고, 해제(delete) 관리의 복잡성이 생깁니다. 구조체를 스택(Stack)에 직접 생성하고 전달하는 방식은 매우 빠르고, 함수 호출 동안 데이터의 유효성을 보장하며, 메모리 누수 위험이 없습니다. 이는 입력 시스템처럼 매 프레임 호출될 수 있는 성능이 중요한 코드에서 매우 효율적인 설계입니다.
 
-### **전방 선언으로 충분한 경우 (이름만 알면 됨):**
+#### 전방 선언으로 충분한 경우 (이름만 알면 됨):
 
 - **`class UInputMappingContext;`, `class UInputAction;`, `class UInputComponent;`**: 이 클래스들은 헤더 파일 내에서 **포인터**로만 참조됩니다.
     - `UInputMappingContext`, `UInputAction`: `TObjectPtr<...>` 형태의 **멤버 변수**로 선언될 가능성이 높습니다.
