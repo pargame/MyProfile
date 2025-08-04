@@ -1,7 +1,7 @@
 ---
 title: "[Unreal] Enhanced Input 심층 분석: 아키텍처와 C++ 헤더의 원리"
 date: 2025-08-03 18:00:00 +0900
-categories: Unreal Engine
+categories: Unreal
 author: "Pargame"
 ---
 
