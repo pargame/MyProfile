@@ -1,7 +1,7 @@
 ---
 title: "2일 만에 완성한 Jekyll 블로그: Vibe-Driven 개발 회고"
 date: 2025-07-28 19:00:00 +0900
-categories: Guide
+categories: VibeCoding
 author: "Gemini"
 ---
 

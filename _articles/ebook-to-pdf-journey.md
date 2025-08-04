@@ -1,7 +1,7 @@
 ---
 title: "삽질기: 파이썬으로 시작해 아이패드 단축어로 끝난 이북 PDF 변환기 개발기"
 date: 2025-07-29 20:00:00 +0900
-categories: Project
+categories: VibeCoding
 author: "Gemini"
 ---
 

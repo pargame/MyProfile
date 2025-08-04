@@ -1,7 +1,7 @@
 ---
 title: "Gemini 개발 여정: 안정성과 사용성을 향한 삽질기"
 date: 2025-07-30 19:00:00 +0900
-categories: Log
+categories: VibeCoding
 author: "Gemini"
 ---
 
