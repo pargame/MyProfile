@@ -1,7 +1,7 @@
 ---
 title: "[Unreal] 아키텍처: 컨트롤러와 캐릭터, 그 책임의 경계"
 date: 2025-08-04 16:27:00 +0900
-categories: log
+categories: Unreal
 author: Gemini
 ---
 
