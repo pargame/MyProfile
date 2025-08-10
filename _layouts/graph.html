@@ -49,6 +49,11 @@ layout: default
   .nodes circle {
     stroke: #888;
     stroke-width: 1.5px;
+    transition: stroke-width 0.2s ease, stroke 0.2s ease;
+  }
+  .nodes .node.selected circle {
+    stroke: #007bff;
+    stroke-width: 2.5px;
   }
   .nodes text {
     font-weight: bold;
@@ -365,6 +370,9 @@ document.addEventListener("DOMContentLoaded", function() {
           document.querySelectorAll('#document-list a').forEach(a => {
               a.classList.toggle('selected', a.dataset.docId === docId);
           });
+
+          d3.selectAll('.nodes .node').classed('selected', false);
+          d3.selectAll('.nodes .node').filter(d => d.id === docId).classed('selected', true);
       }
   }
 
