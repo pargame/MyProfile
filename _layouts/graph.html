@@ -177,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let simulation;
   let currentNodes = [];
   let currentEdges = [];
-  let sizeScale;
 
   function drawGraph(nodes, edges) {
     graphDiagram.innerHTML = '';
@@ -212,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const minDegree = d3.min(nodes, d => d.degree) ?? 0;
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
-    sizeScale = d3.scaleSqrt()
+    const sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
         .range([1, parseInt(nodeSizeInput.value)]);
 
@@ -322,15 +321,15 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!simulation) return;
         simulation.force("link").distance(+linkDistanceInput.value);
         
-        sizeScale = d3.scaleSqrt()
+        const newSizeScale = d3.scaleSqrt()
             .domain(d3.extent(simulation.nodes(), d => d.degree))
             .range([1, +nodeSizeInput.value]);
 
-        d3.selectAll('.nodes circle').attr("r", d => sizeScale(d.degree));
+        d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
         d3.selectAll('.labels text')
-              .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`);
+              .style("font-size", d => `${Math.max(6, newSizeScale(d.degree) / 2.8)}px`);
         
-        simulation.force("collide").radius(d => sizeScale(d.degree) + 2);
+        simulation.force("collide").radius(d => newSizeScale(d.degree) + 2);
         simulation.force("charge").strength(+chargeStrengthInput.value);
         restartSimulation();
     }
