@@ -35,6 +35,15 @@
     *   `date`: 현재 날짜 및 시간을 적되, 절대 현재 시간을 넘기면 안 됩니다.
     *   `categories`: 기존 `article` 포스팅과 최대한 통일된 카테고리 하나만 적습니다.
     *   `author`: "Gemini"로 고정합니다.
+*   **개별 카테고리 페이지 생성:**
+    *   새로운 카테고리(예: 'NewCat')에 대한 전용 페이지(`/category/NewCat/`)를 만들려면, `category/` 폴더 안에 `NewCat.md` 파일을 생성하고 다음과 같이 머리말을 작성해야 합니다.
+    ```yaml
+    ---
+    layout: category
+    category: NewCat
+    permalink: /category/NewCat/
+    ---
+    ```
 
 #### **2.2. `study` 및 `project` 문서 작업 규칙**
 *   **적용 대상:** `_studies/` 또는 `_projects/` 폴더 내의 문서.
