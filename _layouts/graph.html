@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .attr("r", 0) // Start with radius 0 for animation
         .transition()
         .duration(500)
-        .delay((d, i) => i * 15) // Staggered appearance
+        .delay((d, i) => i * 10) // Staggered appearance
         .attr("r", d => sizeScale(d.degree));
 
     const labels = node.append("text")
@@ -234,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .style("opacity", 0) // Start transparent
         .transition()
         .duration(500)
-        .delay((d, i) => i * 15 + 200) // Appear after circles
+        .delay((d, i) => i * 10 + 200) // Appear after circles
         .style("opacity", 1);
 
     const linkedByIndex = {};
@@ -294,13 +294,19 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     function updateForces() {
+        if (!simulation) return;
         simulation.force("link").distance(+linkDistanceInput.value);
-        sizeScale.range([5, +nodeSizeInput.value]);
-        circles.attr("r", d => sizeScale(d.degree));
-        labels.attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
-              .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
-              .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none");
-        simulation.force("collide").radius(d => sizeScale(d.degree) + 2);
+        
+        const newSizeScale = d3.scaleSqrt()
+            .domain(d3.extent(simulation.nodes(), d => d.degree))
+            .range([5, +nodeSizeInput.value]);
+
+        d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
+        d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
+              .style("font-size", d => `${Math.max(6, newSizeScale(d.degree) / 2.8)}px`)
+              .style("display", d => newSizeScale(d.degree) > 6 ? "block" : "none");
+        
+        simulation.force("collide").radius(d => newSizeScale(d.degree) + 2);
         simulation.force("charge").strength(+chargeStrengthInput.value);
         restartSimulation();
     }
@@ -308,14 +314,13 @@ document.addEventListener("DOMContentLoaded", function() {
     linkDistanceInput.oninput = updateForces;
     nodeSizeInput.oninput = updateForces;
     chargeStrengthInput.oninput = updateForces;
-
-    regenButton.onclick = () => {
-        if (currentNodes.length > 0) {
-            // Re-draw the graph from scratch to get the "뿅뿅" effect
-            drawGraph(currentNodes, currentEdges);
-        }
-    };
   }
+
+  regenButton.onclick = () => {
+      if (currentNodes.length > 0) {
+          drawGraph(currentNodes, currentEdges);
+      }
+  };
 
   function renderDocumentContent(docId) {
       const doc = allData.documents[docId];
@@ -351,7 +356,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     docContent.innerHTML = '<p>Select a document to view its content.</p>';
 
-    // Store current data for regeneration
     currentNodes = archiveDocs.map(d => ({
         id: d.url,
         label: d.title,
