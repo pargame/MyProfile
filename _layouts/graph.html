@@ -19,8 +19,8 @@ layout: default
 </style>
 
 <div class="post-content">
-  <h1>Archive Explorer</h1>
-  <p>Select an archive to see the list of documents.</p>
+  <h1>Obsidian Archive Explorer</h1>
+  <p>Select an archive to see the list of documents from the Obsidian vault.</p>
 </div>
 
 <div class="graph-container">
@@ -36,17 +36,13 @@ layout: default
 </div>
 
 <script type="text/javascript">
-{%- assign studies = site.studies -%}
-{%- assign projects = site.projects -%}
-{%- assign obsidian = site.obsidian -%}
-{%- assign all_docs = studies | concat: projects | concat: obsidian -%}
+{%- assign all_docs = site.obsidian -%}
 
 {%- assign archives_temp = "" -%}
 {%- assign documents_temp = "" | split: "" -%}
 
 {%- for doc in all_docs -%}
-  {%- assign collection_path = "_" | append: doc.collection | append: "/" -%}
-  {%- assign relative_path = doc.path | remove_first: collection_path -%}
+  {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
   {%- if relative_path contains "/" -%}
     {%- assign path_parts = relative_path | split: "/" -%}
     {%- assign archive_name = path_parts.first -%}
@@ -61,7 +57,7 @@ const allData = {
   "archives": {{ archives | jsonify }},
   "documents": {
     {%- for doc in documents_temp -%}
-      {%- assign archive_name = doc.path | remove_first: "_" | remove_first: doc.collection | remove_first: "/" | split: "/" | first -%}
+      {%- assign archive_name = doc.path | remove_first: "_obsidian/" | split: "/" | first -%}
       "{{ doc.url }}": {
         "title": {{ doc.title | jsonify }},
         "url": {{ doc.url | relative_url | jsonify }},
