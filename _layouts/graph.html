@@ -55,12 +55,11 @@ layout: default
     stroke: #007bff;
     stroke-width: 2.5px;
   }
-  .labels text {
+  .nodes text {
     font-weight: bold;
     pointer-events: none;
     font-family: sans-serif;
     text-anchor: middle;
-    fill: #cccccc;
   }
   .nodes .node:hover { cursor: pointer; }
   .internal-link { color: #8ab4f8; text-decoration: none; }
@@ -177,7 +176,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let simulation;
   let currentNodes = [];
   let currentEdges = [];
-  let sizeScale; // The single source of truth for node size scaling
 
   function drawGraph(nodes, edges) {
     graphDiagram.innerHTML = '';
@@ -212,9 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const minDegree = d3.min(nodes, d => d.degree) ?? 0;
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
-    
-    // Initialize the single sizeScale, making it accessible to all functions
-    sizeScale = d3.scaleSqrt()
+    const sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
         .range([1, parseInt(nodeSizeInput.value)]);
 
@@ -243,19 +239,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const circles = node.append("circle")
         .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc')
+        .style("fill-opacity", 0.8)
         .attr("r", 0)
         .transition()
         .duration(500)
         .delay((d, i) => i * 10)
         .attr("r", d => sizeScale(d.degree));
 
-    const labels = g.append("g")
-        .attr("class", "labels")
-        .selectAll("text")
-        .data(nodes)
-        .enter().append("text")
+    const labels = node.append("text")
         .text(d => d.label)
+        .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
         .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
+        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc')
         .style("opacity", 0)
         .transition()
         .duration(500)
@@ -291,8 +286,6 @@ document.addEventListener("DOMContentLoaded", function() {
         link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
             .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
         node.attr("transform", d => `translate(${d.x},${d.y})`);
-        labels.attr("x", d => d.x)
-              .attr("y", d => d.y + sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3);
     });
     
     let stopTimeout = setTimeout(() => simulation.stop(), 8000);
@@ -324,14 +317,15 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!simulation) return;
         simulation.force("link").distance(+linkDistanceInput.value);
         
-        // Re-calculate and update the single sizeScale's range
-        sizeScale.range([1, +nodeSizeInput.value]);
+        const newSizeScale = d3.scaleSqrt()
+            .domain(d3.extent(simulation.nodes(), d => d.degree))
+            .range([1, +nodeSizeInput.value]);
 
-        d3.selectAll('.nodes circle').attr("r", d => sizeScale(d.degree));
-        d3.selectAll('.labels text')
-              .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`);
+        d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
+        d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
+              .style("font-size", d => `${Math.max(6, newSizeScale(d.degree) / 2.8)}px`);
         
-        simulation.force("collide").radius(d => sizeScale(d.degree) + 2);
+        simulation.force("collide").radius(d => newSizeScale(d.degree) + 2);
         simulation.force("charge").strength(+chargeStrengthInput.value);
         restartSimulation();
     }
