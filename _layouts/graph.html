@@ -73,7 +73,7 @@ layout: default
     </div>
     <div class="control-group">
         <label for="node-size-input">Max Node Size:</label>
-        <input type="number" id="node-size-input" min="5" max="50" step="1" value="20">
+        <input type="number" id="node-size-input" min="5" max="50" step="1" value="15">
     </div>
     <div class="control-group">
         <label for="charge-strength-input">Charge Strength:</label>
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
     const sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
-        .range([5, parseInt(nodeSizeInput.value)]);
+        .range([3, parseInt(nodeSizeInput.value)]); // Set min node size to 3
 
     simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(+linkDistanceInput.value))
@@ -219,10 +219,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const circles = node.append("circle")
         .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc')
-        .attr("r", 0) // Start with radius 0 for animation
+        .attr("r", 0)
         .transition()
         .duration(500)
-        .delay((d, i) => i * 10) // Staggered appearance
+        .delay((d, i) => i * 10)
         .attr("r", d => sizeScale(d.degree));
 
     const labels = node.append("text")
@@ -230,11 +230,11 @@ document.addEventListener("DOMContentLoaded", function() {
         .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
         .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
         .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none")
-        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc')
-        .style("opacity", 0) // Start transparent
+        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#000000')
+        .style("opacity", 0)
         .transition()
         .duration(500)
-        .delay((d, i) => i * 10 + 200) // Appear after circles
+        .delay((d, i) => i * 10 + 200)
         .style("opacity", 1);
 
     const linkedByIndex = {};
@@ -299,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         const newSizeScale = d3.scaleSqrt()
             .domain(d3.extent(simulation.nodes(), d => d.degree))
-            .range([5, +nodeSizeInput.value]);
+            .range([3, +nodeSizeInput.value]); // Use new min size
 
         d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
         d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
