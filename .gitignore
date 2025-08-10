@@ -15,4 +15,9 @@ vendor/
 # Log files
 *.log
 tmp/
-\n# Visual Studio Code\n.vscode/
+
+# Visual Studio Code
+.vscode/
+
+# Obsidian specific
+_obsidian/Unreal/.obsidian/
