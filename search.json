@@ -1,7 +1,7 @@
 ---
 layout: null
 ---
-{% assign all_content = site.articles | concat: site.studies | concat: site.projects %}
+{% assign all_content = site.articles | concat: site.studies | concat: site.projects | concat: site.obsidian %}
 [
   {% for post in all_content %}
     {%- if post.date -%}
