@@ -17,10 +17,23 @@ layout: null
     {%- assign edges = "" -%}
     {%- for doc in all_docs -%}
       {%- assign from_node_id = doc.url | jsonify -%}
-      {%- assign links = doc.content | scan: "[[([^\]]+)]]" -%}
-      {%- for link in links -%}
-        {%- assign link_title = link[0] -%}
-        {%- for target_doc in all_docs -%}
-          {%- if target_doc.title == link_title -%}
-            {%- assign to_node_id = target_doc.url | jsonify -%}
-            {%- assign edge_json = "{\"from\":
+      {%- assign content_parts = doc.content | split: '[[' -%}
+      {%- for part in content_parts offset: 1 -%}
+        {%- assign link_title = part | split: ']]' | first | strip -%}
+        {%- if link_title != "" -%}
+          {%- for target_doc in all_docs -%}
+            {%- if target_doc.title == link_title -%}
+              {%- assign to_node_id = target_doc.url | jsonify -%}
+              {%- capture edge_json -%}
+                {"from":{{ from_node_id }},"to":{{ to_node_id }}}
+              {%- endcapture -%}
+              {%- assign edges = edges | append: edge_json | append: "," -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+    {{ edges | remove_last: "," }}
+  ]
+}
