@@ -1,18 +1,14 @@
 ---
 layout: default
 ---
-
-
-
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
 
 <style type="text/css">
   .graph-container { display: flex; flex-direction: column; gap: 20px; }
-  .top-section { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; }
-  .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; }
+  .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; width: 100%; box-sizing: border-box;}
   #archive-selector { width: 100%; }
-  #document-list { width: 30%; min-width: 250px; height: 70vh; overflow-y: auto; }
-  #document-content { flex-grow: 1; height: 70vh; overflow-y: auto; }
+  #document-list { height: 40vh; overflow-y: auto; }
+  #document-content { min-height: 50vh; }
   .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; }
   .archive-button.active { background: #007bff; color: white; border-color: #007bff; }
   #document-list ul { list-style: none; padding: 0; margin: 0; }
@@ -28,13 +24,11 @@ layout: default
 
 <div class="graph-container">
   <div id="archive-selector" class="graph-section"></div>
-  <div class="top-section">
-    <div id="document-list" class="graph-section">
-      <p>Select an archive first.</p>
-    </div>
-    <div id="document-content" class="graph-section">
-      <p>Select a document to view its content.</p>
-    </div>
+  <div id="document-list" class="graph-section">
+    <p>Select an archive first.</p>
+  </div>
+  <div id="document-content" class="graph-section">
+    <p>Select a document to view its content.</p>
   </div>
 </div>
 
