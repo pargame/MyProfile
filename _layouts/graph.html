@@ -449,18 +449,5 @@ document.addEventListener("DOMContentLoaded", function() {
       docList.innerHTML = '';
       docContent.innerHTML = '';
   }
-
-  // --- DEBUGGING ---
-  const debugOutput = document.getElementById('debug-output');
-  if (debugOutput) {
-    debugOutput.textContent = JSON.stringify(allData, null, 2);
-  }
 });
 </script>
-
-<!-- DEBUGGING OUTPUT -->
-<div id="debug-container" class="graph-section" style="margin-top: 20px;">
-  <h2>Debug Information</h2>
-  <p>This section helps diagnose build issues on GitHub Pages. It will be removed after fixing the issue.</p>
-  <pre id="debug-output" style="white-space: pre-wrap; word-wrap: break-word; background: #111; padding: 10px; height: 400px; overflow-y: scroll;"></pre>
-</div>
