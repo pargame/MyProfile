@@ -5,7 +5,11 @@ layout: null
 {%- assign projects = site.projects -%}
 {%- assign obsidian = site.obsidian -%}
 {%- assign all_docs = studies | concat: projects | concat: obsidian -%}
-{%- assign archives = all_docs | map: "in" | uniq | compact -%}
+
+{%- assign study_archives = studies | map: "in" -%}
+{%- assign project_archives = projects | map: "in" -%}
+{%- assign obsidian_archives = obsidian | map: "path" | map: split: "/" | map: slice: 1, 1 | map: first -%}
+{%- assign archives = study_archives | concat: project_archives | concat: obsidian_archives | uniq | compact -%}
 
 {
   "archives": {{ archives | jsonify }},
@@ -27,10 +31,17 @@ layout: null
         {%- endif -%}
       {%- endfor -%}
       {%- assign final_links = links | remove_last: "," | split: "," -%}
+
+      {%- if doc.collection == "obsidian" -%}
+        {%- assign archive_name = doc.path | split: "/" | slice: 1, 1 | first -%}
+      {%- else -%}
+        {%- assign archive_name = doc.in -%}
+      {%- endif -%}
+
       {{ doc_id }}: {
         "title": {{ doc.title | jsonify }},
         "url": {{ doc.url | relative_url | jsonify }},
-        "archive": {{ doc.in | jsonify }},
+        "archive": {{ archive_name | jsonify }},
         "content": {{ doc.content | jsonify }},
         "links": {{ final_links | jsonify }}
       }{%- unless forloop.last -%},{%- endunless -%}

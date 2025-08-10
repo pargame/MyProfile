@@ -97,7 +97,6 @@ defaults:
       path: "_obsidian"
     values:
       layout: "page"
-      in: "Unreal"
 
 # Markdown Processing
 # 마크다운 렌더링 엔진(kramdown)과 관련된 설정을 합니다.
