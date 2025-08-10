@@ -69,7 +69,7 @@ layout: default
   <div id="graph-controls" class="graph-section" style="display: none;">
     <div class="control-group">
         <label for="link-distance-input">Link Distance:</label>
-        <input type="number" id="link-distance-input" min="50" max="500" step="10" value="300">
+        <input type="number" id="link-distance-input" min="50" max="500" step="10" value="150">
     </div>
     <div class="control-group">
         <label for="node-size-input">Max Node Size:</label>
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
     const sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
-        .range([3, parseInt(nodeSizeInput.value)]); // Set min node size to 3
+        .range([3, parseInt(nodeSizeInput.value)]);
 
     simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(+linkDistanceInput.value))
@@ -230,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
         .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
         .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none")
-        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#000000')
+        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc')
         .style("opacity", 0)
         .transition()
         .duration(500)
@@ -299,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         const newSizeScale = d3.scaleSqrt()
             .domain(d3.extent(simulation.nodes(), d => d.degree))
-            .range([3, +nodeSizeInput.value]); // Use new min size
+            .range([3, +nodeSizeInput.value]);
 
         d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
         d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
