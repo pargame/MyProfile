@@ -8,25 +8,34 @@ layout: null
 
 {%- assign study_archives_temp = "" -%}
 {%- for doc in studies -%}
-  {%- assign path_parts = doc.path | remove_first: "_studies/" | split: "/" -%}
-  {%- assign archive_name = path_parts.first -%}
-  {%- assign study_archives_temp = study_archives_temp | append: archive_name | append: "," -%}
+  {%- assign relative_path = doc.path | remove_first: "_studies/" -%}
+  {%- if relative_path contains "/" -%}
+    {%- assign path_parts = relative_path | split: "/" -%}
+    {%- assign archive_name = path_parts.first -%}
+    {%- assign study_archives_temp = study_archives_temp | append: archive_name | append: "," -%}
+  {%- endif -%}
 {%- endfor -%}
 {%- assign study_archives = study_archives_temp | split: "," -%}
 
 {%- assign project_archives_temp = "" -%}
 {%- for doc in projects -%}
-  {%- assign path_parts = doc.path | remove_first: "_projects/" | split: "/" -%}
-  {%- assign archive_name = path_parts.first -%}
-  {%- assign project_archives_temp = project_archives_temp | append: archive_name | append: "," -%}
+  {%- assign relative_path = doc.path | remove_first: "_projects/" -%}
+  {%- if relative_path contains "/" -%}
+    {%- assign path_parts = relative_path | split: "/" -%}
+    {%- assign archive_name = path_parts.first -%}
+    {%- assign project_archives_temp = project_archives_temp | append: archive_name | append: "," -%}
+  {%- endif -%}
 {%- endfor -%}
 {%- assign project_archives = project_archives_temp | split: "," -%}
 
 {%- assign obsidian_archives_temp = "" -%}
 {%- for doc in obsidian -%}
-  {%- assign path_parts = doc.path | remove_first: "_obsidian/" | split: "/" -%}
-  {%- assign archive_name = path_parts.first -%}
-  {%- assign obsidian_archives_temp = obsidian_archives_temp | append: archive_name | append: "," -%}
+  {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
+  {%- if relative_path contains "/" -%}
+    {%- assign path_parts = relative_path | split: "/" -%}
+    {%- assign archive_name = path_parts.first -%}
+    {%- assign obsidian_archives_temp = obsidian_archives_temp | append: archive_name | append: "," -%}
+  {%- endif -%}
 {%- endfor -%}
 {%- assign obsidian_archives = obsidian_archives_temp | split: "," -%}
 
@@ -35,7 +44,19 @@ layout: null
 {
   "archives": {{ archives | jsonify }},
   "documents": {
+    {%- assign processed_docs = "" | split: "" -%}
     {%- for doc in all_docs -%}
+      {%- assign collection_path = "_" | append: doc.collection | append: "/" -%}
+      {%- assign relative_path = doc.path | remove_first: collection_path -%}
+      {%- assign archive_name = "" -%}
+      {%- if relative_path contains "/" -%}
+        {%- assign path_parts = relative_path | split: "/" -%}
+        {%- assign archive_name = path_parts.first -%}
+        {%- assign processed_docs = processed_docs | push: doc -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- for doc in processed_docs -%}
       {%- assign doc_id = doc.url | jsonify -%}
       {%- assign content_parts = doc.content | split: '[[' -%}
       {%- assign links = "" -%}
@@ -54,7 +75,8 @@ layout: null
       {%- assign final_links = links | remove_last: "," | split: "," -%}
 
       {%- assign collection_path = "_" | append: doc.collection | append: "/" -%}
-      {%- assign path_parts = doc.path | remove_first: collection_path | split: "/" -%}
+      {%- assign relative_path = doc.path | remove_first: collection_path -%}
+      {%- assign path_parts = relative_path | split: "/" -%}
       {%- assign archive_name = path_parts.first -%}
 
       {{ doc_id }}: {
