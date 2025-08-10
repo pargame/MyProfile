@@ -57,6 +57,9 @@ layout: default
     text-anchor: middle;
   }
   .nodes .node:hover { cursor: pointer; }
+  .internal-link { color: #8ab4f8; text-decoration: none; }
+  .internal-link:hover { text-decoration: underline; }
+  .internal-link-broken { color: #ff8a80; }
 </style>
 
 <div class="post-content">
@@ -148,6 +151,18 @@ document.addEventListener("DOMContentLoaded", function() {
   const graphDiagram = document.getElementById('graph-diagram');
   const graphControls = document.getElementById('graph-controls');
 
+  const lookupMap = new Map();
+  for (const url in allData.documents) {
+      const doc = allData.documents[url];
+      const normalizedTitle = doc.title.toLowerCase().replace(/ /g, "");
+      lookupMap.set(normalizedTitle, url);
+      const basename = url.substring(url.lastIndexOf('/') + 1).replace('.html', '');
+      const normalizedBasename = basename.toLowerCase().replace(/ /g, "");
+      if (!lookupMap.has(normalizedBasename)) {
+          lookupMap.set(normalizedBasename, url);
+      }
+  }
+
   const linkDistanceInput = document.getElementById('link-distance-input');
   const nodeSizeInput = document.getElementById('node-size-input');
   const chargeStrengthInput = document.getElementById('charge-strength-input');
@@ -192,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
     const sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
-        .range([3, parseInt(nodeSizeInput.value)]);
+        .range([1, parseInt(nodeSizeInput.value)]);
 
     simulation = d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id).distance(+linkDistanceInput.value))
@@ -298,7 +313,7 @@ document.addEventListener("DOMContentLoaded", function() {
         
         const newSizeScale = d3.scaleSqrt()
             .domain(d3.extent(simulation.nodes(), d => d.degree))
-            .range([3, +nodeSizeInput.value]);
+            .range([1, +nodeSizeInput.value]);
 
         d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
         d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
@@ -323,7 +338,30 @@ document.addEventListener("DOMContentLoaded", function() {
   function renderDocumentContent(docId) {
       const doc = allData.documents[docId];
       if (doc) {
-          docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(doc.content);
+          const processedContent = doc.content.replace(/\[\[([^|\]#]+)(?:\|([^\]]+))?\]\]/g, (match, linkTarget, alias) => {
+              const target = linkTarget.trim();
+              const display = alias ? alias.trim() : target;
+              const normalizedTarget = target.toLowerCase().replace(/ /g, "");
+              const targetUrl = lookupMap.get(normalizedTarget);
+              if (targetUrl) {
+                  return `<a href="#" class="internal-link" data-doc-id="${targetUrl}">${display}</a>`;
+              } else {
+                  return `<span class="internal-link-broken">${display}</span>`;
+              }
+          });
+
+          docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(processedContent);
+
+          docContent.querySelectorAll('.internal-link').forEach(link => {
+              link.addEventListener('click', e => {
+                  e.preventDefault();
+                  const newDocId = e.target.dataset.docId;
+                  if (newDocId) {
+                      renderDocumentContent(newDocId);
+                  }
+              });
+          });
+
           document.querySelectorAll('#document-list a').forEach(a => {
               a.classList.toggle('selected', a.dataset.docId === docId);
           });
