@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const minDegree = d3.min(nodes, d => d.degree) ?? 0;
     const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
     
-    // Initialize the single sizeScale
+    // Initialize the single sizeScale, making it accessible to all functions
     sizeScale = d3.scaleSqrt()
         .domain([minDegree, maxDegree])
         .range([1, parseInt(nodeSizeInput.value)]);
@@ -243,10 +243,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const circles = node.append("circle")
         .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc')
-        .attr("r", 0)
-        .transition()
-        .duration(500)
-        .delay((d, i) => i * 10)
         .attr("r", d => sizeScale(d.degree));
 
     const labels = g.append("g")
@@ -255,12 +251,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .data(nodes)
         .enter().append("text")
         .text(d => d.label)
-        .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
-        .style("opacity", 0)
-        .transition()
-        .duration(500)
-        .delay((d, i) => i * 10 + 200)
-        .style("opacity", 1);
+        .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`);
 
     const linkedByIndex = {};
     links.forEach(d => {
@@ -324,7 +315,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!simulation) return;
         simulation.force("link").distance(+linkDistanceInput.value);
         
-        // Re-calculate and update the single sizeScale
+        // Re-calculate and update the single sizeScale's range
         sizeScale.range([1, +nodeSizeInput.value]);
 
         d3.selectAll('.nodes circle').attr("r", d => sizeScale(d.degree));
