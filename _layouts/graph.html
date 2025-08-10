@@ -2,22 +2,61 @@
 layout: default
 ---
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
 
 <style type="text/css">
   .graph-container { display: flex; flex-direction: column; gap: 20px; }
   .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; box-sizing: border-box;}
-  #archive-selector { width: 100%; }
-  #graph-diagram { width: 100%; height: 60vh; text-align: center; padding-top: 20px; color: #888; border-color: #444; }
+  #archive-selector { width: 100%; padding-bottom: 5px; }
+  #graph-controls { padding: 10px 15px; display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
+  #graph-diagram { width: 100%; height: 60vh; text-align: center; color: #888; border-color: #444; overflow: hidden; background: #1e1e1e; }
   .bottom-section { display: flex; flex-wrap: nowrap; gap: 20px; width: 100%; }
   #document-list { width: 40%; height: 70vh; overflow-y: auto; }
   #document-content { width: 60%; height: 70vh; overflow-y: auto; }
-  .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; }
-  .archive-button.active { background: #007bff; color: white; border-color: #007bff; }
+  .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; transition: background-color 0.2s, border-color 0.2s; }
+  .archive-button:hover { background-color: #555; border-color: #666; }
+  .archive-button.active { background: #007bff; color: white; border-color: #0056b3; }
   #document-list ul { list-style: none; padding: 0; margin: 0; }
   #document-list a { display: block; padding: 8px; text-decoration: none; color: #ccc; border-bottom: 1px solid #333; }
   #document-list a:hover { background: #383838; }
   #document-list a.selected { background: #007bff; color: white; }
+  .control-group { display: flex; align-items: center; gap: 5px; }
+  .control-group label { margin-right: 5px; }
+  .control-group input[type="number"] {
+    width: 60px;
+    background-color: #333;
+    color: #eee;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 4px;
+  }
+  #regen-button {
+    background: #007bff; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;
+  }
+  #regen-button:hover { background: #0056b3; }
+
+
+  /* D3 specific styles */
+  .links line {
+    stroke: #555555;
+    stroke-opacity: 0.7;
+    stroke-width: 0.8px;
+    transition: stroke-opacity 0.3s ease, stroke 0.3s ease;
+  }
+  .nodes .node {
+    transition: opacity 0.3s ease;
+  }
+  .nodes circle {
+    stroke: #888;
+    stroke-width: 1.5px;
+  }
+  .nodes text {
+    font-weight: bold;
+    pointer-events: none;
+    font-family: sans-serif;
+    text-anchor: middle;
+  }
+  .nodes .node:hover { cursor: pointer; }
 </style>
 
 <div class="post-content">
@@ -27,6 +66,21 @@ layout: default
 
 <div class="graph-container">
   <div id="archive-selector" class="graph-section"></div>
+  <div id="graph-controls" class="graph-section" style="display: none;">
+    <div class="control-group">
+        <label for="link-distance-input">Link Distance:</label>
+        <input type="number" id="link-distance-input" min="50" max="500" step="10" value="300">
+    </div>
+    <div class="control-group">
+        <label for="node-size-input">Max Node Size:</label>
+        <input type="number" id="node-size-input" min="5" max="50" step="1" value="20">
+    </div>
+    <div class="control-group">
+        <label for="charge-strength-input">Charge Strength:</label>
+        <input type="number" id="charge-strength-input" min="-500" max="100" step="10" value="0">
+    </div>
+    <button id="regen-button">Regenerate</button>
+  </div>
   <div id="graph-diagram" class="graph-section">
     <p>Select an archive to display the graph.</p>
   </div>
@@ -42,172 +96,291 @@ layout: default
 
 <script type="text/javascript">
 {%- assign all_docs = site.obsidian -%}
-
 {%- assign archives_temp = "" -%}
-{%- assign documents_temp = "" | split: "" -%}
-
+{%- assign documents_json_parts = "" | split: "" -%}
 {%- for doc in all_docs -%}
   {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
   {%- if relative_path contains "/" -%}
     {%- assign path_parts = relative_path | split: "/" -%}
     {%- assign archive_name = path_parts.first -%}
     {%- assign archives_temp = archives_temp | append: archive_name | append: "," -%}
-    {%- assign documents_temp = documents_temp | push: doc -%}
-  {%- endif -%}
-{%- endfor -%}
-
-{%- assign archives = archives_temp | split: "," | uniq | compact | sort -%}
-
-const allData = {
-  "archives": {{ archives | jsonify }},
-  "documents": {
-    {%- for doc in documents_temp -%}
-      {%- assign archive_name = doc.path | remove_first: "_obsidian/" | split: "/" | first -%}
-
-      {%- assign content_parts = doc.content | split: '[[' -%}
-      {%- assign links_array = "" | split: "" -%}
-      {%- for part in content_parts offset: 1 -%}
-        {%- assign link_text_raw = part | split: ']]' | first | strip -%}
-        {%- assign link_target_base = link_text_raw | split: '|' | first | split: '#' | first | strip -%}
-
-        {%- if link_target_base != "" -%}
-          {%- for target_doc in documents_temp -%}
-            {%- assign target_doc_normalized_url = target_doc.url | remove_first: "/obsidian/" | remove_last: "/" -%}
-            {%- if target_doc.title == link_target_base or target_doc_normalized_url == link_target_base -%}
-              {%- assign links_array = links_array | push: target_doc.url -%}
-              {%- break -%}
-            {%- endif -%}
-          {%- endfor -%}
-        {%- endif -%}
-      {%- endfor -%}
-
+    {%- assign content_parts = doc.content | split: '[[' -%}
+    {%- assign links_array = "" | split: "" -%}
+    {%- for part in content_parts offset: 1 -%}
+      {%- assign link_text_raw = part | split: ']]' | first | strip -%}
+      {%- assign link_target_base = link_text_raw | split: '|' | first | split: '#' | first | strip -%}
+      {%- assign link_target_normalized = link_target_base | downcase | replace: " ", "" -%}
+      {%- if link_target_normalized != "" -%}
+        {%- for target_doc in all_docs -%}
+          {%- assign target_doc_basename_normalized = target_doc.basename | downcase | replace: " ", "" -%}
+          {%- assign target_doc_title_normalized = target_doc.title | downcase | replace: " ", "" -%}
+          {%- if target_doc_basename_normalized == link_target_normalized or target_doc_title_normalized == link_target_normalized -%}
+            {%- assign links_array = links_array | push: target_doc.url -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- capture doc_json -%}
       "{{ doc.url }}": {
         "title": {{ doc.title | jsonify }},
         "url": {{ doc.url | relative_url | jsonify }},
         "archive": {{ archive_name | jsonify }},
         "content": {{ doc.content | jsonify }},
         "links": {{ links_array | jsonify }}
-      }{%- unless forloop.last -%},{%- endunless -%}
-    {%- endfor -%}
-  }
+      }
+    {%- endcapture -%}
+    {%- assign documents_json_parts = documents_json_parts | push: doc_json -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign archives = archives_temp | split: "," | uniq | compact | sort -%}
+
+const allData = {
+  "archives": {{ archives | jsonify }},
+  "documents": { {{ documents_json_parts | join: "," }} }
 };
 
+document.addEventListener("DOMContentLoaded", function() {
+  const converter = new showdown.Converter();
+  const archiveSelector = document.getElementById('archive-selector');
+  const docList = document.getElementById('document-list');
+  const docContent = document.getElementById('document-content');
+  const graphDiagram = document.getElementById('graph-diagram');
+  const graphControls = document.getElementById('graph-controls');
 
-  document.addEventListener("DOMContentLoaded", function() {
-    const converter = new showdown.Converter();
-    const archiveSelector = document.getElementById('archive-selector');
-    const docList = document.getElementById('document-list');
-    const docContent = document.getElementById('document-content');
-    const graphDiagram = document.getElementById('graph-diagram');
-    let network = null;
+  const linkDistanceInput = document.getElementById('link-distance-input');
+  const nodeSizeInput = document.getElementById('node-size-input');
+  const chargeStrengthInput = document.getElementById('charge-strength-input');
+  const regenButton = document.getElementById('regen-button');
 
-    function renderGraph(nodes, edges) {
-      if (network) {
-        network.destroy();
-      }
-      const container = graphDiagram;
-      const data = { 
-        nodes: new vis.DataSet(nodes), 
-        edges: new vis.DataSet(edges) 
-      };
-      const options = {
-        nodes: {
-          shape: 'box',
-          margin: 10,
-          widthConstraint: {
-            maximum: 200
-          }
-        },
-        edges: {
-          arrows: 'to'
-        },
-        physics: {
-          enabled: true,
-          solver: 'barnesHut',
-          barnesHut: {
-            gravitationalConstant: -2000,
-            centralGravity: 0.3,
-            springLength: 95,
-            springConstant: 0.04,
-            damping: 0.09,
-            avoidOverlap: 0.1
-          }
-        },
-        layout: {
-          randomSeed: undefined,
-          improvedLayout:true,
-        }
-      };
-      network = new vis.Network(container, data, options);
-      network.on("click", function (params) {
-        if (params.nodes.length > 0) {
-          const docId = params.nodes[0];
-          renderDocumentContent(docId);
-        }
-      });
+  let simulation;
+  let currentNodes = [];
+  let currentEdges = [];
+
+  function drawGraph(nodes, edges) {
+    graphDiagram.innerHTML = '';
+    const width = graphDiagram.clientWidth;
+    const height = graphDiagram.clientHeight;
+
+    const svg = d3.select(graphDiagram).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .call(d3.zoom().on("zoom", (event) => {
+           g.attr("transform", event.transform);
+        }))
+        .append("g");
+
+    const g = svg.append("g");
+
+    const nodeMap = new Map(nodes.map(node => [node.id, node]));
+    const links = edges.map(edge => ({
+        source: nodeMap.get(edge.from),
+        target: nodeMap.get(edge.to)
+    })).filter(l => l.source && l.target);
+
+    const degrees = new Map();
+    nodes.forEach(node => degrees.set(node.id, 0));
+    links.forEach(link => {
+        degrees.set(link.source.id, (degrees.get(link.source.id) || 0) + 1);
+        degrees.set(link.target.id, (degrees.get(link.target.id) || 0) + 1);
+    });
+    nodes.forEach(node => {
+        node.degree = degrees.get(node.id) || 0;
+    });
+
+    const minDegree = d3.min(nodes, d => d.degree) ?? 0;
+    const maxDegree = d3.max(nodes, d => d.degree) ?? 1;
+    const sizeScale = d3.scaleSqrt()
+        .domain([minDegree, maxDegree])
+        .range([5, parseInt(nodeSizeInput.value)]);
+
+    simulation = d3.forceSimulation(nodes)
+        .force("link", d3.forceLink(links).id(d => d.id).distance(+linkDistanceInput.value))
+        .force("charge", d3.forceManyBody().strength(+chargeStrengthInput.value))
+        .force("center", d3.forceCenter(width / 2, height / 2).strength(0.1))
+        .force("collide", d3.forceCollide().radius(d => sizeScale(d.degree) + 2));
+
+    const link = g.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(links)
+        .enter().append("line");
+
+    const node = g.append("g")
+        .attr("class", "nodes")
+        .selectAll("g")
+        .data(nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+    const circles = node.append("circle")
+        .attr("r", d => sizeScale(d.degree))
+        .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc');
+
+    const labels = node.append("text")
+        .text(d => d.label)
+        .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
+        .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
+        .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none")
+        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc');
+
+    const linkedByIndex = {};
+    links.forEach(d => {
+        linkedByIndex[`${d.source.id},${d.target.id}`] = 1;
+    });
+
+    function areNodesConnected(a, b) {
+        return linkedByIndex[`${a.id},${b.id}`] || linkedByIndex[`${b.id},${a.id}`] || a.id === b.id;
     }
 
-    function renderDocumentContent(docId) {
-        const doc = allData.documents[docId];
-        if (doc) {
-            docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(doc.content);
-            document.querySelectorAll('#document-list a').forEach(a => {
-                a.classList.toggle('selected', a.dataset.docId === docId);
-            });
-        }
+    node.on('mouseover.highlight', (event, d) => {
+        node.style('opacity', o => areNodesConnected(d, o) ? 1 : 0.15);
+        link.style('stroke-opacity', l => (l.source === d || l.target === d) ? 1 : 0.15);
+        link.style('stroke', l => (l.source === d || l.target === d) ? '#ff8c00' : '#555555');
+    });
+
+    node.on('mouseout.highlight', () => {
+        node.style('opacity', 1);
+        link.style('stroke-opacity', 0.7);
+        link.style('stroke', '#555555');
+    });
+
+    node.on("click", (event, d) => {
+        renderDocumentContent(d.id);
+    });
+
+    simulation.on("tick", () => {
+        link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+    
+    let stopTimeout = setTimeout(() => simulation.stop(), 8000);
+
+    function restartSimulation() {
+        clearTimeout(stopTimeout);
+        simulation.alpha(1).restart();
+        stopTimeout = setTimeout(() => simulation.stop(), 8000);
     }
 
-    function selectArchive(archiveName) {
-      document.querySelectorAll('.archive-button').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.archive === archiveName);
-      });
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
 
-      // Populate document list
-      const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
-      docList.innerHTML = '<ul></ul>';
-      const ul = docList.querySelector('ul');
-      if (archiveDocs.length === 0) {
-        docList.innerHTML = '<p>No documents in this archive.</p>';
-      } else {
-        archiveDocs.forEach(doc => {
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = "#";
-          a.textContent = doc.title;
-          a.dataset.docId = doc.url;
-          a.onclick = (e) => { e.preventDefault(); renderDocumentContent(doc.url); };
-          li.appendChild(a);
-          ul.appendChild(li);
-        });
-      }
-      docContent.innerHTML = '<p>Select a document to view its content.</p>';
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
 
-      // Render graph for the archive
-      const nodes = archiveDocs.map(d => ({ id: d.url, label: d.title, group: d.archive }));
-      const edges = [];
-      archiveDocs.forEach(doc => {
-        if(doc.links) {
-          doc.links.forEach(linkId => {
-            if (archiveDocs.some(d => d.url === linkId)) {
-              edges.push({ from: doc.url, to: linkId });
-            }
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+    
+    function updateForces() {
+        simulation.force("link").distance(+linkDistanceInput.value);
+        sizeScale.range([5, +nodeSizeInput.value]);
+        circles.attr("r", d => sizeScale(d.degree));
+        labels.attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
+              .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
+              .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none");
+        simulation.force("collide").radius(d => sizeScale(d.degree) + 2);
+        simulation.force("charge").strength(+chargeStrengthInput.value);
+        restartSimulation();
+    }
+
+    linkDistanceInput.oninput = updateForces;
+    nodeSizeInput.oninput = updateForces;
+    chargeStrengthInput.oninput = updateForces;
+
+    regenButton.onclick = () => {
+        if (currentNodes.length > 0) {
+            drawGraph(currentNodes, currentEdges);
+        }
+    };
+  }
+
+  function renderDocumentContent(docId) {
+      const doc = allData.documents[docId];
+      if (doc) {
+          docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(doc.content);
+          document.querySelectorAll('#document-list a').forEach(a => {
+              a.classList.toggle('selected', a.dataset.docId === docId);
           });
-        }
-      });
-      renderGraph(nodes, edges);
-    }
+      }
+  }
 
-    if (allData.archives.length > 0) {
-        allData.archives.forEach(archive => {
-          const button = document.createElement('button');
-          button.textContent = archive;
-          button.dataset.archive = archive;
-          button.className = 'archive-button';
-          button.onclick = () => selectArchive(archive);
-          archiveSelector.appendChild(button);
-        });
+  function selectArchive(archiveName) {
+    document.querySelectorAll('.archive-button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.archive === archiveName);
+    });
+
+    const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
+    docList.innerHTML = '<ul></ul>';
+    const ul = docList.querySelector('ul');
+    if (archiveDocs.length === 0) {
+      docList.innerHTML = '<p>No documents in this archive.</p>';
     } else {
-        archiveSelector.innerHTML = '<p>No archives found.</p>';
+      archiveDocs.sort((a, b) => a.title.localeCompare(b.title)).forEach(doc => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = "#";
+        a.textContent = doc.title;
+        a.dataset.docId = doc.url;
+        a.onclick = (e) => { e.preventDefault(); renderDocumentContent(doc.url); };
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
     }
-  });
+    docContent.innerHTML = '<p>Select a document to view its content.</p>';
+
+    currentNodes = archiveDocs.map(d => ({
+        id: d.url,
+        label: d.title,
+        isEmpty: d.content.trim() === ''
+    }));
+    currentEdges = [];
+    archiveDocs.forEach(doc => {
+      if(doc.links) {
+        doc.links.forEach(linkId => {
+          if (archiveDocs.some(d => d.url === linkId)) {
+            currentEdges.push({ from: doc.url, to: linkId });
+          }
+        });
+      }
+    });
+    
+    if (currentNodes.length > 0) {
+        graphControls.style.display = 'flex';
+        drawGraph(currentNodes, currentEdges);
+    } else {
+        graphDiagram.innerHTML = '<p>No documents to graph in this archive.</p>';
+        graphControls.style.display = 'none';
+    }
+  }
+
+  if (allData.archives && allData.archives.length > 0) {
+      allData.archives.forEach(archive => {
+        const button = document.createElement('button');
+        button.textContent = archive;
+        button.dataset.archive = archive;
+        button.className = 'archive-button';
+        button.onclick = () => selectArchive(archive);
+        archiveSelector.appendChild(button);
+      });
+      selectArchive(allData.archives[0]);
+  } else {
+      archiveSelector.innerHTML = '<p>No archives found.</p>';
+      graphDiagram.innerHTML = '<p>No data to display.</p>';
+      docList.innerHTML = '';
+      docContent.innerHTML = '';
+  }
+});
 </script>
