@@ -1,0 +1,101 @@
+---
+layout: default
+---
+<link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<style type="text/css">
+  #content-graph {
+    width: 100%;
+    height: 80vh;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+</style>
+
+<div class="post-content">
+  {{ content }}
+</div>
+
+<div id="content-graph"></div>
+
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    const container = document.getElementById('content-graph');
+
+    // Fetch the graph data
+    fetch('{{ "/graph-data.json" | relative_url }}')
+      .then(response => response.json())
+      .then(data => {
+        const nodes = new vis.DataSet(data.nodes);
+        const edges = new vis.DataSet(data.edges);
+
+        const graphData = {
+          nodes: nodes,
+          edges: edges,
+        };
+
+        const options = {
+          nodes: {
+            shape: 'box',
+            margin: 10,
+            font: {
+              size: 14,
+              face: 'Inter',
+              color: '#333'
+            },
+            borderWidth: 1,
+            color: {
+              border: '#ccc',
+              background: '#fff',
+              highlight: {
+                border: '#888',
+                background: '#f0f0f0'
+              }
+            }
+          },
+          edges: {
+            width: 1,
+            color: {
+              color: '#ccc',
+              highlight: '#888'
+            },
+            arrows: {
+              to: { enabled: true, scaleFactor: 0.5 }
+            }
+          },
+          physics: {
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: {
+              gravitationalConstant: -50,
+              centralGravity: 0.01,
+              springLength: 200,
+              springConstant: 0.08,
+              avoidOverlap: 0.5
+            }
+          },
+          interaction: {
+            hover: true,
+            tooltipDelay: 200,
+            dragNodes: true,
+            dragView: true,
+            zoomView: true
+          }
+        };
+
+        const network = new vis.Network(container, graphData, options);
+
+        network.on("click", function (params) {
+          if (params.nodes.length > 0) {
+            const nodeId = params.nodes[0];
+            const node = nodes.get(nodeId);
+            if (node.url) {
+              window.location.href = node.url;
+            }
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching graph data:', error));
+  });
+</script>
