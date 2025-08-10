@@ -229,7 +229,6 @@ document.addEventListener("DOMContentLoaded", function() {
         .text(d => d.label)
         .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
         .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
-        .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none")
         .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc')
         .style("opacity", 0)
         .transition()
@@ -303,8 +302,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         d3.selectAll('.nodes circle').attr("r", d => newSizeScale(d.degree));
         d3.selectAll('.nodes text').attr("y", d => newSizeScale(d.degree) + (newSizeScale(d.degree) / 2.8) + 3)
-              .style("font-size", d => `${Math.max(6, newSizeScale(d.degree) / 2.8)}px`)
-              .style("display", d => newSizeScale(d.degree) > 6 ? "block" : "none");
+              .style("font-size", d => `${Math.max(6, newSizeScale(d.degree) / 2.8)}px`);
         
         simulation.force("collide").radius(d => newSizeScale(d.degree) + 2);
         simulation.force("charge").strength(+chargeStrengthInput.value);
