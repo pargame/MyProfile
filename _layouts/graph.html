@@ -2,12 +2,13 @@
 layout: default
 ---
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
 <style type="text/css">
   .graph-container { display: flex; flex-direction: column; gap: 20px; }
   .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; box-sizing: border-box;}
   #archive-selector { width: 100%; }
-  #graph-diagram { width: 100%; min-height: 50vh; text-align: center; padding-top: 20px; color: #888; }
+  #graph-diagram { width: 100%; height: 60vh; text-align: center; padding-top: 20px; color: #888; border-color: #444; }
   .bottom-section { display: flex; flex-wrap: nowrap; gap: 20px; width: 100%; }
   #document-list { width: 40%; height: 70vh; overflow-y: auto; }
   #document-content { width: 60%; height: 70vh; overflow-y: auto; }
@@ -27,7 +28,7 @@ layout: default
 <div class="graph-container">
   <div id="archive-selector" class="graph-section"></div>
   <div id="graph-diagram" class="graph-section">
-    <p>Graph visualization will appear here.</p>
+    <p>Select an archive to display the graph.</p>
   </div>
   <div class="bottom-section">
     <div id="document-list" class="graph-section">
@@ -62,11 +63,27 @@ const allData = {
   "documents": {
     {%- for doc in documents_temp -%}
       {%- assign archive_name = doc.path | remove_first: "_obsidian/" | split: "/" | first -%}
+
+      {%- assign content_parts = doc.content | split: '[[' -%}
+      {%- assign links_array = "" | split: "" -%}
+      {%- for part in content_parts offset: 1 -%}
+        {%- assign link_title = part | split: ']]' | first | strip -%}
+        {%- if link_title != "" -%}
+          {%- for target_doc in documents_temp -%}
+            {%- if target_doc.title == link_title -%}
+              {%- assign links_array = links_array | push: target_doc.url -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+
       "{{ doc.url }}": {
         "title": {{ doc.title | jsonify }},
         "url": {{ doc.url | relative_url | jsonify }},
         "archive": {{ archive_name | jsonify }},
-        "content": {{ doc.content | jsonify }}
+        "content": {{ doc.content | jsonify }},
+        "links": {{ links_array | jsonify }}
       }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
   }
@@ -78,6 +95,54 @@ const allData = {
     const archiveSelector = document.getElementById('archive-selector');
     const docList = document.getElementById('document-list');
     const docContent = document.getElementById('document-content');
+    const graphDiagram = document.getElementById('graph-diagram');
+    let network = null;
+
+    function renderGraph(nodes, edges) {
+      if (network) {
+        network.destroy();
+      }
+      const container = graphDiagram;
+      const data = { 
+        nodes: new vis.DataSet(nodes), 
+        edges: new vis.DataSet(edges) 
+      };
+      const options = {
+        nodes: {
+          shape: 'box',
+          margin: 10,
+          widthConstraint: {
+            maximum: 200
+          }
+        },
+        edges: {
+          arrows: 'to'
+        },
+        physics: {
+          enabled: true,
+          solver: 'barnesHut',
+          barnesHut: {
+            gravitationalConstant: -2000,
+            centralGravity: 0.3,
+            springLength: 95,
+            springConstant: 0.04,
+            damping: 0.09,
+            avoidOverlap: 0.1
+          }
+        },
+        layout: {
+          randomSeed: undefined,
+          improvedLayout:true,
+        }
+      };
+      network = new vis.Network(container, data, options);
+      network.on("click", function (params) {
+        if (params.nodes.length > 0) {
+          const docId = params.nodes[0];
+          renderDocumentContent(docId);
+        }
+      });
+    }
 
     function renderDocumentContent(docId) {
         const doc = allData.documents[docId];
@@ -94,10 +159,10 @@ const allData = {
         btn.classList.toggle('active', btn.dataset.archive === archiveName);
       });
 
+      // Populate document list
+      const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
       docList.innerHTML = '<ul></ul>';
       const ul = docList.querySelector('ul');
-      const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
-      
       if (archiveDocs.length === 0) {
         docList.innerHTML = '<p>No documents in this archive.</p>';
       } else {
@@ -107,15 +172,26 @@ const allData = {
           a.href = "#";
           a.textContent = doc.title;
           a.dataset.docId = doc.url;
-          a.onclick = (e) => {
-            e.preventDefault();
-            renderDocumentContent(doc.url);
-          };
+          a.onclick = (e) => { e.preventDefault(); renderDocumentContent(doc.url); };
           li.appendChild(a);
           ul.appendChild(li);
         });
       }
       docContent.innerHTML = '<p>Select a document to view its content.</p>';
+
+      // Render graph for the archive
+      const nodes = archiveDocs.map(d => ({ id: d.url, label: d.title, group: d.archive }));
+      const edges = [];
+      archiveDocs.forEach(doc => {
+        if(doc.links) {
+          doc.links.forEach(linkId => {
+            if (archiveDocs.some(d => d.url === linkId)) {
+              edges.push({ from: doc.url, to: linkId });
+            }
+          });
+        }
+      });
+      renderGraph(nodes, edges);
     }
 
     if (allData.archives.length > 0) {
