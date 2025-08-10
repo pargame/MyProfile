@@ -54,6 +54,7 @@ header_pages:
   - projects.md
   - categories.md
   - search.md
+  - graph.md
 
 # Collections
 # 'studies'와 'projects'를 컬렉션으로 정의하여 관리합니다.
