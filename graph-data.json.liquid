@@ -8,7 +8,15 @@ layout: null
 
 {%- assign study_archives = studies | map: "in" -%}
 {%- assign project_archives = projects | map: "in" -%}
-{%- assign obsidian_archives = obsidian | map: "path" | map: split: "/" | map: slice: 1, 1 | map: first -%}
+
+{%- assign obsidian_archives_temp = "" -%}
+{%- for doc in obsidian -%}
+  {%- assign path_parts = doc.path | remove_first: "_obsidian/" | split: "/" -%}
+  {%- assign archive_name = path_parts.first -%}
+  {%- assign obsidian_archives_temp = obsidian_archives_temp | append: archive_name | append: "," -%}
+{%- endfor -%}
+{%- assign obsidian_archives = obsidian_archives_temp | split: "," -%}
+
 {%- assign archives = study_archives | concat: project_archives | concat: obsidian_archives | uniq | compact -%}
 
 {
@@ -33,7 +41,8 @@ layout: null
       {%- assign final_links = links | remove_last: "," | split: "," -%}
 
       {%- if doc.collection == "obsidian" -%}
-        {%- assign archive_name = doc.path | split: "/" | slice: 1, 1 | first -%}
+        {%- assign path_parts = doc.path | remove_first: "_obsidian/" | split: "/" -%}
+        {%- assign archive_name = path_parts.first -%}
       {%- else -%}
         {%- assign archive_name = doc.in -%}
       {%- endif -%}
