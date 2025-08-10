@@ -67,10 +67,13 @@ const allData = {
       {%- assign content_parts = doc.content | split: '[[' -%}
       {%- assign links_array = "" | split: "" -%}
       {%- for part in content_parts offset: 1 -%}
-        {%- assign link_title = part | split: ']]' | first | strip -%}
+        {%- assign link_text_raw = part | split: ']]' | first | strip -%}
+        {%- assign link_title = link_text_raw | split: '|' | first | strip -%}
+
         {%- if link_title != "" -%}
           {%- for target_doc in documents_temp -%}
-            {%- if target_doc.title == link_title -%}
+            {%- assign target_doc_normalized_url = target_doc.url | remove_first: "/obsidian/" | remove_last: "/" -%}
+            {%- if target_doc.title == link_title or target_doc_normalized_url == link_title -%}
               {%- assign links_array = links_array | push: target_doc.url -%}
               {%- break -%}
             {%- endif -%}
