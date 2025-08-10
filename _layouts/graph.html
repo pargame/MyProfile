@@ -1,114 +1,124 @@
 ---
 layout: default
 ---
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
 
 <style type="text/css">
-  .graph-container { display: flex; flex-wrap: wrap; gap: 20px; }
-  .graph-section { padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
+  .graph-container { display: flex; flex-direction: column; gap: 20px; }
+  .top-section { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; }
+  .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; }
   #archive-selector { width: 100%; }
-  #document-list { width: 25%; min-width: 200px; height: 75vh; overflow-y: auto; }
-  #document-content { flex-grow: 1; height: 75vh; overflow-y: auto; }
-  #graph-diagram { width: 100%; height: 80vh; margin-top: 20px; }
-  .archive-button { background: #eee; border: 1px solid #ccc; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; }
-  .archive-button.active { background: #007bff; color: white; }
-  #document-list ul { list-style: none; padding: 0; }
-  #document-list a { display: block; padding: 5px; text-decoration: none; color: #333; }
-  #document-list a:hover { background: #eee; }
+  #document-list { width: 30%; min-width: 250px; height: 70vh; overflow-y: auto; }
+  #document-content { flex-grow: 1; height: 70vh; overflow-y: auto; }
+  .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; }
+  .archive-button.active { background: #007bff; color: white; border-color: #007bff; }
+  #document-list ul { list-style: none; padding: 0; margin: 0; }
+  #document-list a { display: block; padding: 8px; text-decoration: none; color: #ccc; border-bottom: 1px solid #333; }
+  #document-list a:hover { background: #383838; }
+  #document-list a.selected { background: #007bff; color: white; }
 </style>
 
 <div class="post-content">
-  <h1>Graph Archive</h1>
-  <p>Select an archive to see the list of documents and their connections.</p>
+  <h1>Archive Explorer</h1>
+  <p>Select an archive to see the list of documents.</p>
 </div>
 
 <div class="graph-container">
   <div id="archive-selector" class="graph-section"></div>
-  <div id="document-list" class="graph-section">
-    <p>Select an archive first.</p>
+  <div class="top-section">
+    <div id="document-list" class="graph-section">
+      <p>Select an archive first.</p>
+    </div>
+    <div id="document-content" class="graph-section">
+      <p>Select a document to view its content.</p>
+    </div>
   </div>
-  <div id="document-content" class="graph-section">
-    <p>Select a document to view its content.</p>
-  </div>
-  <div id="graph-diagram" class="graph-section"></div>
 </div>
 
 <script type="text/javascript">
+{%- assign studies = site.studies -%}
+{%- assign projects = site.projects -%}
+{%- assign obsidian = site.obsidian -%}
+{%- assign all_docs = studies | concat: projects | concat: obsidian -%}
+
+{%- assign archives_temp = "" -%}
+{%- assign documents_temp = "" | split: "" -%}
+
+{%- for doc in all_docs -%}
+  {%- assign collection_path = "_" | append: doc.collection | append: "/" -%}
+  {%- assign relative_path = doc.path | remove_first: collection_path -%}
+  {%- if relative_path contains "/" -%}
+    {%- assign path_parts = relative_path | split: "/" -%}
+    {%- assign archive_name = path_parts.first -%}
+    {%- assign archives_temp = archives_temp | append: archive_name | append: "," -%}
+    {%- assign documents_temp = documents_temp | push: doc -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign archives = archives_temp | split: "," | uniq | compact | sort -%}
+
+const allData = {
+  "archives": {{ archives | jsonify }},
+  "documents": {
+    {%- for doc in documents_temp -%}
+      {%- assign archive_name = doc.path | remove_first: "_" | remove_first: doc.collection | remove_first: "/" | split: "/" | first -%}
+      "{{ doc.url }}": {
+        "title": {{ doc.title | jsonify }},
+        "url": {{ doc.url | relative_url | jsonify }},
+        "archive": {{ archive_name | jsonify }},
+        "content": {{ doc.content | jsonify }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+};
+
+
   document.addEventListener("DOMContentLoaded", function() {
     const converter = new showdown.Converter();
     const archiveSelector = document.getElementById('archive-selector');
     const docList = document.getElementById('document-list');
     const docContent = document.getElementById('document-content');
-    const graphDiagram = document.getElementById('graph-diagram');
-    let network = null;
-    let allData = {};
-
-    function renderGraph(nodes, edges) {
-      if (network) {
-        network.destroy();
-      }
-      const container = graphDiagram;
-      const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
-      const options = { /* ... vis.js options from previous implementation ... */ };
-      network = new vis.Network(container, data, options);
-      network.on("click", function (params) {
-        if (params.nodes.length > 0) {
-          const docId = params.nodes[0];
-          renderDocumentContent(docId);
-        }
-      });
-    }
 
     function renderDocumentContent(docId) {
         const doc = allData.documents[docId];
         if (doc) {
-            docContent.innerHTML = converter.makeHtml(doc.content);
+            docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(doc.content);
+            document.querySelectorAll('#document-list a').forEach(a => {
+                a.classList.toggle('selected', a.dataset.docId === docId);
+            });
         }
     }
 
     function selectArchive(archiveName) {
-      // Update active button
       document.querySelectorAll('.archive-button').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.archive === archiveName);
       });
 
-      // Populate document list
       docList.innerHTML = '<ul></ul>';
       const ul = docList.querySelector('ul');
       const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
-      archiveDocs.forEach(doc => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = "#";
-        a.textContent = doc.title;
-        a.onclick = (e) => {
-          e.preventDefault();
-          renderDocumentContent(doc.url);
-        };
-        li.appendChild(a);
-        ul.appendChild(li);
-      });
-
-      // Render graph for the archive
-      const nodes = archiveDocs.map(d => ({ id: d.url, label: d.title, group: d.archive }));
-      const edges = [];
-      archiveDocs.forEach(doc => {
-        doc.links.forEach(linkId => {
-          if (archiveDocs.some(d => d.url === linkId)) {
-            edges.push({ from: doc.url, to: linkId });
-          }
+      
+      if (archiveDocs.length === 0) {
+        docList.innerHTML = '<p>No documents in this archive.</p>';
+      } else {
+        archiveDocs.forEach(doc => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = "#";
+          a.textContent = doc.title;
+          a.dataset.docId = doc.url;
+          a.onclick = (e) => {
+            e.preventDefault();
+            renderDocumentContent(doc.url);
+          };
+          li.appendChild(a);
+          ul.appendChild(li);
         });
-      });
-      renderGraph(nodes, edges);
+      }
       docContent.innerHTML = '<p>Select a document to view its content.</p>';
     }
 
-    fetch('{{ "/graph-data.json" | relative_url }}')
-      .then(response => response.json())
-      .then(data => {
-        allData = data;
-        // Populate archive selector
+    if (allData.archives.length > 0) {
         allData.archives.forEach(archive => {
           const button = document.createElement('button');
           button.textContent = archive;
@@ -117,8 +127,8 @@ layout: default
           button.onclick = () => selectArchive(archive);
           archiveSelector.appendChild(button);
         });
-        graphDiagram.innerHTML = '<p>Select an archive to display the graph.</p>';
-      })
-      .catch(error => console.error('Error fetching graph data:', error));
+    } else {
+        archiveSelector.innerHTML = '<p>No archives found.</p>';
+    }
   });
 </script>
