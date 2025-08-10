@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .on("end", dragended));
 
     const circles = node.append("circle")
-        .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc')
+        .attr("fill", d => d.isEmpty ? '#888' : '#cccccc')
         .style("fill-opacity", 0.8)
         .attr("r", 0)
         .transition()
@@ -405,7 +405,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     currentNodes = archiveDocs.map(d => ({
         id: d.url,
-        label: d.title,
+        label: d.url.split('/').filter(Boolean).pop(),
         isEmpty: d.content.trim() === ''
     }));
     currentEdges = [];
