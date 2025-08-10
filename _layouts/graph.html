@@ -117,7 +117,8 @@ layout: default
       {%- if link_target_normalized != "" -%}
         {%- for target_doc in all_docs -%}
           {%- assign target_doc_basename_normalized = target_doc.basename | downcase | replace: " ", "" -%}
-          {%- if target_doc_basename_normalized == link_target_normalized -%}
+          {%- assign target_doc_title_normalized = target_doc.title | downcase | replace: " ", "" -%}
+          {%- if target_doc_basename_normalized == link_target_normalized or target_doc_title_normalized == link_target_normalized -%}
             {%- assign links_array = links_array | push: target_doc.url -%}
             {%- break -%}
           {%- endif -%}
