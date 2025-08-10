@@ -1,7 +1,9 @@
 ---
 layout: null
 ---
-{%- assign all_docs = site.documents | where_exp: "doc", "doc.collection_name == 'studies' or doc.collection_name == 'projects'" -%}
+{%- assign studies = site.studies -%}
+{%- assign projects = site.projects -%}
+{%- assign all_docs = studies | concat: projects -%}
 {%- assign archives = all_docs | map: "in" | uniq | compact -%}
 
 {
