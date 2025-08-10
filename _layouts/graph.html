@@ -5,10 +5,12 @@ layout: default
 
 <style type="text/css">
   .graph-container { display: flex; flex-direction: column; gap: 20px; }
-  .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; width: 100%; box-sizing: border-box;}
+  .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; box-sizing: border-box;}
   #archive-selector { width: 100%; }
-  #document-list { height: 40vh; overflow-y: auto; }
-  #document-content { min-height: 50vh; }
+  #graph-diagram { width: 100%; min-height: 50vh; text-align: center; padding-top: 20px; color: #888; }
+  .bottom-section { display: flex; flex-wrap: nowrap; gap: 20px; width: 100%; }
+  #document-list { width: 40%; height: 70vh; overflow-y: auto; }
+  #document-content { width: 60%; height: 70vh; overflow-y: auto; }
   .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; }
   .archive-button.active { background: #007bff; color: white; border-color: #007bff; }
   #document-list ul { list-style: none; padding: 0; margin: 0; }
@@ -24,11 +26,16 @@ layout: default
 
 <div class="graph-container">
   <div id="archive-selector" class="graph-section"></div>
-  <div id="document-list" class="graph-section">
-    <p>Select an archive first.</p>
+  <div id="graph-diagram" class="graph-section">
+    <p>Graph visualization will appear here.</p>
   </div>
-  <div id="document-content" class="graph-section">
-    <p>Select a document to view its content.</p>
+  <div class="bottom-section">
+    <div id="document-list" class="graph-section">
+      <p>Select an archive first.</p>
+    </div>
+    <div id="document-content" class="graph-section">
+      <p>Select a document to view its content.</p>
+    </div>
   </div>
 </div>
 
