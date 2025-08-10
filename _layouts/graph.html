@@ -76,16 +76,12 @@ layout: default
   <div id="archive-selector" class="graph-section"></div>
   <div id="graph-controls" class="graph-section" style="display: none;">
     <div class="control-group">
-        <label for="link-distance-input">Link Distance:</label>
-        <input type="number" id="link-distance-input" min="3" max="500" step="1" value="10">
-    </div>
-    <div class="control-group">
         <label for="node-size-input">Max Node Size:</label>
         <input type="number" id="node-size-input" min="5" max="50" step="1" value="15">
     </div>
     <div class="control-group">
         <label for="charge-strength-input">Tension:</label>
-        <input type="number" id="charge-strength-input" min="-500" max="100" step="1" value="-60">
+        <input type="number" id="charge-strength-input" min="-500" max="100" step="1" value="-50">
     </div>
     <button id="regen-button">Regenerate</button>
   </div>
@@ -168,7 +164,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
   }
 
-  const linkDistanceInput = document.getElementById('link-distance-input');
   const nodeSizeInput = document.getElementById('node-size-input');
   const chargeStrengthInput = document.getElementById('charge-strength-input');
   const regenButton = document.getElementById('regen-button');
@@ -222,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .range([1, getClampedValue(nodeSizeInput)]);
 
     simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id).distance(getClampedValue(linkDistanceInput)))
+        .force("link", d3.forceLink(links).id(d => d.id))
         .force("charge", d3.forceManyBody().strength(getClampedValue(chargeStrengthInput)))
         .force("center", d3.forceCenter(width / 2, height / 2).strength(0.1))
         .force("collide", d3.forceCollide().radius(d => sizeScale(d.degree) + 2));
@@ -277,12 +272,14 @@ document.addEventListener("DOMContentLoaded", function() {
         node.style('opacity', o => areNodesConnected(d, o) ? 1 : 0.15);
         link.style('stroke-opacity', l => (l.source === d || l.target === d) ? 1 : 0.15);
         link.style('stroke', l => (l.source === d || l.target === d) ? '#ff8c00' : '#555555');
+        d3.select(event.currentTarget).select('text').style('fill', '#007bff');
     });
 
     node.on('mouseout.highlight', () => {
         node.style('opacity', 1);
         link.style('stroke-opacity', 0.7);
         link.style('stroke', '#555555');
+        node.select('text').style('fill', o => o.isEmpty ? '#bbbbbb' : '#cccccc');
     });
 
     node.on("click", (event, d) => {
@@ -322,7 +319,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     function updateForces() {
         if (!simulation) return;
-        simulation.force("link").distance(getClampedValue(linkDistanceInput));
         
         const newSizeScale = d3.scaleSqrt()
             .domain(d3.extent(simulation.nodes(), d => d.degree))
@@ -337,7 +333,6 @@ document.addEventListener("DOMContentLoaded", function() {
         restartSimulation();
     }
 
-    linkDistanceInput.oninput = updateForces;
     nodeSizeInput.oninput = updateForces;
     chargeStrengthInput.oninput = updateForces;
   }
