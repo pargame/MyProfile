@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function() {
               }
           });
 
-          const titleFromFilename = docId.split('/').filter(Boolean).pop();
+          const titleFromFilename = docId.split('/').filter(Boolean).pop().replace(/\.html$/, '');
           docContent.innerHTML = "<h2>" + titleFromFilename + "</h2>" + converter.makeHtml(processedContent);
 
           docContent.querySelectorAll('.internal-link').forEach(link => {
@@ -392,14 +392,14 @@ document.addEventListener("DOMContentLoaded", function() {
       docList.innerHTML = '<p>No documents in this archive.</p>';
     } else {
       archiveDocs.sort((a, b) => {
-        const labelA = a.url.split('/').filter(Boolean).pop();
-        const labelB = b.url.split('/').filter(Boolean).pop();
+        const labelA = a.url.split('/').filter(Boolean).pop().replace(/\.html$/, '');
+        const labelB = b.url.split('/').filter(Boolean).pop().replace(/\.html$/, '');
         return labelA.localeCompare(labelB);
       }).forEach(doc => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = "#";
-        a.textContent = doc.url.split('/').filter(Boolean).pop();
+        a.textContent = doc.url.split('/').filter(Boolean).pop().replace(/\.html$/, '');
         a.dataset.docId = doc.url;
         a.onclick = (e) => { e.preventDefault(); renderDocumentContent(doc.url); };
         li.appendChild(a);
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     currentNodes = archiveDocs.map(d => ({
         id: d.url,
-        label: d.url.split('/').filter(Boolean).pop(),
+        label: d.url.split('/').filter(Boolean).pop().replace(/\.html$/, ''),
         isEmpty: d.content.trim() === ''
     }));
     currentEdges = [];
