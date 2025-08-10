@@ -5,27 +5,37 @@ layout: page
 
 ### 프로젝트 목록
 
-{% assign grouped_projects = site.projects | group_by: "In" | sort: "name" %}
+{%- assign docs = site.projects | sort: "title" -%}
+{%- assign groups = "" -%}
+{%- for doc in docs -%}
+  {%- assign path_parts = doc.path | remove_first: "_projects/" | split: "/" -%}
+  {%- assign group_name = path_parts.first -%}
+  {%- assign groups = groups | append: group_name | append: "," -%}
+{%- endfor -%}
+{%- assign unique_groups = groups | split: "," | uniq | sort -%}
 
-{% for group in grouped_projects %}
-  {% assign group_name = group.name | default: "기타" %}
-  <details>
+{% for group_name in unique_groups %}
+  {%- if group_name == "" -%}{%- continue -%}{%- endif -%}
+  <details open>
     <summary>{{ group_name }}</summary>
     <ul class="post-list">
-      {% assign items_sorted = group.items | sort: "title" %}
-      {% for item in items_sorted %}
+      {%- for doc in docs -%}
+        {%- assign path_parts = doc.path | remove_first: "_projects/" | split: "/" -%}
+        {%- assign doc_group = path_parts.first -%}
+        {%- if doc_group == group_name -%}
         <li>
           <h4>
-            <a class="post-link" href="{{ item.url | relative_url }}">
-              {{ item.title }}
+            <a class="post-link" href="{{ doc.url | relative_url }}">
+              {{ doc.title }}
             </a>
           </h4>
-          {%- if item.author -%}
-            <span class="post-meta">by {{ item.author }}</span>
+          {%- if doc.author -%}
+            <span class="post-meta">by {{ doc.author }}</span>
           {%- endif -%}
-          <p>{{ item.content | strip_html }}</p>
+          <p>{{ doc.content | strip_html | truncatewords: 30 }}</p>
         </li>
-      {% endfor %}
+        {%- endif -%}
+      {%- endfor -%}
     </ul>
   </details>
 {% endfor %}

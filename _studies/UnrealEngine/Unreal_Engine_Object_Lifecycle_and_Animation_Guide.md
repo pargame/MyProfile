@@ -1,5 +1,4 @@
 ---
-In: UnrealEngine
 title: "Unreal Engine Object Lifecycle and Animation Architecture"
 author: "Gemini"
 ---

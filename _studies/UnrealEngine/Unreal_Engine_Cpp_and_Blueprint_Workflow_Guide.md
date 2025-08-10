@@ -1,5 +1,4 @@
 ---
-In: UnrealEngine
 title: "Unreal Engine C++ and Blueprint Workflow Guide"
 author: "Gemini"
 ---

@@ -1,6 +1,5 @@
 ---
 title: "그래프 순회 (DFS & BFS)"
-In: Algorithm
 author: "Gemini"
 ---
 

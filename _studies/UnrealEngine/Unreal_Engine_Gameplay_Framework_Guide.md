@@ -1,5 +1,4 @@
 ---
-In: UnrealEngine
 title: "Unreal Engine Gameplay Framework Guide"
 author: "Gemini"
 ---

@@ -6,8 +6,21 @@ layout: null
 {%- assign obsidian = site.obsidian -%}
 {%- assign all_docs = studies | concat: projects | concat: obsidian -%}
 
-{%- assign study_archives = studies | map: "in" -%}
-{%- assign project_archives = projects | map: "in" -%}
+{%- assign study_archives_temp = "" -%}
+{%- for doc in studies -%}
+  {%- assign path_parts = doc.path | remove_first: "_studies/" | split: "/" -%}
+  {%- assign archive_name = path_parts.first -%}
+  {%- assign study_archives_temp = study_archives_temp | append: archive_name | append: "," -%}
+{%- endfor -%}
+{%- assign study_archives = study_archives_temp | split: "," -%}
+
+{%- assign project_archives_temp = "" -%}
+{%- for doc in projects -%}
+  {%- assign path_parts = doc.path | remove_first: "_projects/" | split: "/" -%}
+  {%- assign archive_name = path_parts.first -%}
+  {%- assign project_archives_temp = project_archives_temp | append: archive_name | append: "," -%}
+{%- endfor -%}
+{%- assign project_archives = project_archives_temp | split: "," -%}
 
 {%- assign obsidian_archives_temp = "" -%}
 {%- for doc in obsidian -%}
@@ -40,12 +53,9 @@ layout: null
       {%- endfor -%}
       {%- assign final_links = links | remove_last: "," | split: "," -%}
 
-      {%- if doc.collection == "obsidian" -%}
-        {%- assign path_parts = doc.path | remove_first: "_obsidian/" | split: "/" -%}
-        {%- assign archive_name = path_parts.first -%}
-      {%- else -%}
-        {%- assign archive_name = doc.in -%}
-      {%- endif -%}
+      {%- assign collection_path = "_" | append: doc.collection | append: "/" -%}
+      {%- assign path_parts = doc.path | remove_first: collection_path | split: "/" -%}
+      {%- assign archive_name = path_parts.first -%}
 
       {{ doc_id }}: {
         "title": {{ doc.title | jsonify }},
