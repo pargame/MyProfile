@@ -7,13 +7,13 @@ layout: default
 <style type="text/css">
   .graph-container { display: flex; flex-direction: column; gap: 20px; }
   .graph-section { padding: 15px; border: 1px solid #333; border-radius: 8px; background: #2c2c2c; box-sizing: border-box;}
-  #archive-selector { width: 100%; padding-bottom: 5px; }
+  #archive-selector { width: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
   #graph-controls { padding: 10px 15px; display: flex; align-items: center; flex-wrap: wrap; gap: 15px; }
   #graph-diagram { width: 100%; height: 60vh; text-align: center; color: #888; border-color: #444; overflow: hidden; background: #1e1e1e; }
   .bottom-section { display: flex; flex-wrap: nowrap; gap: 20px; width: 100%; }
   #document-list { width: 40%; height: 70vh; overflow-y: auto; }
   #document-content { width: 60%; height: 70vh; overflow-y: auto; }
-  .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; color: #eee; transition: background-color 0.2s, border-color 0.2s; }
+  .archive-button { background: #444; border: 1px solid #555; padding: 8px 12px; cursor: pointer; border-radius: 5px; color: #eee; transition: background-color 0.2s, border-color 0.2s; }
   .archive-button:hover { background-color: #555; border-color: #666; }
   .archive-button.active { background: #007bff; color: white; border-color: #0056b3; }
   #document-list ul { list-style: none; padding: 0; margin: 0; }
@@ -358,7 +358,8 @@ document.addEventListener("DOMContentLoaded", function() {
               }
           });
 
-          docContent.innerHTML = "<h2>" + doc.title + "</h2>" + converter.makeHtml(processedContent);
+          const titleFromFilename = docId.split('/').filter(Boolean).pop();
+          docContent.innerHTML = "<h2>" + titleFromFilename + "</h2>" + converter.makeHtml(processedContent);
 
           docContent.querySelectorAll('.internal-link').forEach(link => {
               link.addEventListener('click', e => {
@@ -390,11 +391,15 @@ document.addEventListener("DOMContentLoaded", function() {
     if (archiveDocs.length === 0) {
       docList.innerHTML = '<p>No documents in this archive.</p>';
     } else {
-      archiveDocs.sort((a, b) => a.title.localeCompare(b.title)).forEach(doc => {
+      archiveDocs.sort((a, b) => {
+        const labelA = a.url.split('/').filter(Boolean).pop();
+        const labelB = b.url.split('/').filter(Boolean).pop();
+        return labelA.localeCompare(labelB);
+      }).forEach(doc => {
         const li = document.createElement('li');
         const a = document.createElement('a');
         a.href = "#";
-        a.textContent = doc.title;
+        a.textContent = doc.url.split('/').filter(Boolean).pop();
         a.dataset.docId = doc.url;
         a.onclick = (e) => { e.preventDefault(); renderDocumentContent(doc.url); };
         li.appendChild(a);
