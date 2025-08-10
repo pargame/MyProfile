@@ -1,39 +1,36 @@
 ---
 layout: null
 ---
-{%- assign all_docs = site.documents -%}
+{%- assign all_docs = site.documents | where_exp: "doc", "doc.collection_name == 'studies' or doc.collection_name == 'projects'" -%}
+{%- assign archives = all_docs | map: "in" | uniq | compact -%}
+
 {
-  "nodes": [
+  "archives": {{ archives | jsonify }},
+  "documents": {
     {%- for doc in all_docs -%}
-      {
-        "id": {{ doc.url | jsonify }},
-        "label": {{ doc.title | jsonify }},
-        "url": {{ doc.url | relative_url | jsonify }},
-        "group": {{ doc.collection | jsonify }}
-      }{%- unless forloop.last -%},{%- endunless -%}
-    {%- endfor -%}
-  ],
-  "edges": [
-    {%- assign edges = "" -%}
-    {%- for doc in all_docs -%}
-      {%- assign from_node_id = doc.url | jsonify -%}
+      {%- assign doc_id = doc.url | jsonify -%}
       {%- assign content_parts = doc.content | split: '[[' -%}
+      {%- assign links = "" -%}
       {%- for part in content_parts offset: 1 -%}
         {%- assign link_title = part | split: ']]' | first | strip -%}
         {%- if link_title != "" -%}
           {%- for target_doc in all_docs -%}
             {%- if target_doc.title == link_title -%}
-              {%- assign to_node_id = target_doc.url | jsonify -%}
-              {%- capture edge_json -%}
-                {"from":{{ from_node_id }},"to":{{ to_node_id }}}
-              {%- endcapture -%}
-              {%- assign edges = edges | append: edge_json | append: "," -%}
+              {%- assign link_id = target_doc.url | jsonify -%}
+              {%- assign links = links | append: link_id | append: "," -%}
               {%- break -%}
             {%- endif -%}
           {%- endfor -%}
         {%- endif -%}
       {%- endfor -%}
+      {%- assign final_links = links | remove_last: "," | split: "," -%}
+      {{ doc_id }}: {
+        "title": {{ doc.title | jsonify }},
+        "url": {{ doc.url | relative_url | jsonify }},
+        "archive": {{ doc.in | jsonify }},
+        "content": {{ doc.content | jsonify }},
+        "links": {{ final_links | jsonify }}
+      }{%- unless forloop.last -%},{%- endunless -%}
     {%- endfor -%}
-    {{ edges | remove_last: "," }}
-  ]
+  }
 }

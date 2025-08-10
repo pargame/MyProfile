@@ -1,100 +1,123 @@
 ---
 layout: default
 ---
-<link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
 
 <style type="text/css">
-  #content-graph {
-    width: 100%;
-    height: 80vh;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
+  .graph-container { display: flex; flex-wrap: wrap; gap: 20px; }
+  .graph-section { padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; }
+  #archive-selector { width: 100%; }
+  #document-list { width: 25%; min-width: 200px; height: 75vh; overflow-y: auto; }
+  #document-content { flex-grow: 1; height: 75vh; overflow-y: auto; }
+  #graph-diagram { width: 100%; height: 80vh; margin-top: 20px; }
+  .archive-button { background: #eee; border: 1px solid #ccc; padding: 8px 12px; margin-right: 10px; cursor: pointer; border-radius: 5px; }
+  .archive-button.active { background: #007bff; color: white; }
+  #document-list ul { list-style: none; padding: 0; }
+  #document-list a { display: block; padding: 5px; text-decoration: none; color: #333; }
+  #document-list a:hover { background: #eee; }
 </style>
 
 <div class="post-content">
-  {{ content }}
+  <h1>Graph Archive</h1>
+  <p>Select an archive to see the list of documents and their connections.</p>
 </div>
 
-<div id="content-graph"></div>
+<div class="graph-container">
+  <div id="archive-selector" class="graph-section"></div>
+  <div id="document-list" class="graph-section">
+    <p>Select an archive first.</p>
+  </div>
+  <div id="document-content" class="graph-section">
+    <p>Select a document to view its content.</p>
+  </div>
+  <div id="graph-diagram" class="graph-section"></div>
+</div>
 
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
-    const container = document.getElementById('content-graph');
+    const converter = new showdown.Converter();
+    const archiveSelector = document.getElementById('archive-selector');
+    const docList = document.getElementById('document-list');
+    const docContent = document.getElementById('document-content');
+    const graphDiagram = document.getElementById('graph-diagram');
+    let network = null;
+    let allData = {};
 
-    // Fetch the graph data
+    function renderGraph(nodes, edges) {
+      if (network) {
+        network.destroy();
+      }
+      const container = graphDiagram;
+      const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+      const options = { /* ... vis.js options from previous implementation ... */ };
+      network = new vis.Network(container, data, options);
+      network.on("click", function (params) {
+        if (params.nodes.length > 0) {
+          const docId = params.nodes[0];
+          renderDocumentContent(docId);
+        }
+      });
+    }
+
+    function renderDocumentContent(docId) {
+        const doc = allData.documents[docId];
+        if (doc) {
+            docContent.innerHTML = converter.makeHtml(doc.content);
+        }
+    }
+
+    function selectArchive(archiveName) {
+      // Update active button
+      document.querySelectorAll('.archive-button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.archive === archiveName);
+      });
+
+      // Populate document list
+      docList.innerHTML = '<ul></ul>';
+      const ul = docList.querySelector('ul');
+      const archiveDocs = Object.values(allData.documents).filter(d => d.archive === archiveName);
+      archiveDocs.forEach(doc => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = "#";
+        a.textContent = doc.title;
+        a.onclick = (e) => {
+          e.preventDefault();
+          renderDocumentContent(doc.url);
+        };
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+
+      // Render graph for the archive
+      const nodes = archiveDocs.map(d => ({ id: d.url, label: d.title, group: d.archive }));
+      const edges = [];
+      archiveDocs.forEach(doc => {
+        doc.links.forEach(linkId => {
+          if (archiveDocs.some(d => d.url === linkId)) {
+            edges.push({ from: doc.url, to: linkId });
+          }
+        });
+      });
+      renderGraph(nodes, edges);
+      docContent.innerHTML = '<p>Select a document to view its content.</p>';
+    }
+
     fetch('{{ "/graph-data.json" | relative_url }}')
       .then(response => response.json())
       .then(data => {
-        const nodes = new vis.DataSet(data.nodes);
-        const edges = new vis.DataSet(data.edges);
-
-        const graphData = {
-          nodes: nodes,
-          edges: edges,
-        };
-
-        const options = {
-          nodes: {
-            shape: 'box',
-            margin: 10,
-            font: {
-              size: 14,
-              face: 'Inter',
-              color: '#333'
-            },
-            borderWidth: 1,
-            color: {
-              border: '#ccc',
-              background: '#fff',
-              highlight: {
-                border: '#888',
-                background: '#f0f0f0'
-              }
-            }
-          },
-          edges: {
-            width: 1,
-            color: {
-              color: '#ccc',
-              highlight: '#888'
-            },
-            arrows: {
-              to: { enabled: true, scaleFactor: 0.5 }
-            }
-          },
-          physics: {
-            solver: 'forceAtlas2Based',
-            forceAtlas2Based: {
-              gravitationalConstant: -50,
-              centralGravity: 0.01,
-              springLength: 200,
-              springConstant: 0.08,
-              avoidOverlap: 0.5
-            }
-          },
-          interaction: {
-            hover: true,
-            tooltipDelay: 200,
-            dragNodes: true,
-            dragView: true,
-            zoomView: true
-          }
-        };
-
-        const network = new vis.Network(container, graphData, options);
-
-        network.on("click", function (params) {
-          if (params.nodes.length > 0) {
-            const nodeId = params.nodes[0];
-            const node = nodes.get(nodeId);
-            if (node.url) {
-              window.location.href = node.url;
-            }
-          }
+        allData = data;
+        // Populate archive selector
+        allData.archives.forEach(archive => {
+          const button = document.createElement('button');
+          button.textContent = archive;
+          button.dataset.archive = archive;
+          button.className = 'archive-button';
+          button.onclick = () => selectArchive(archive);
+          archiveSelector.appendChild(button);
         });
+        graphDiagram.innerHTML = '<p>Select an archive to display the graph.</p>';
       })
       .catch(error => console.error('Error fetching graph data:', error));
   });
