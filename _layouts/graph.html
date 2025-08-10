@@ -218,15 +218,24 @@ document.addEventListener("DOMContentLoaded", function() {
             .on("end", dragended));
 
     const circles = node.append("circle")
-        .attr("r", d => sizeScale(d.degree))
-        .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc');
+        .attr("fill", d => d.isEmpty ? '#555555' : '#cccccc')
+        .attr("r", 0) // Start with radius 0 for animation
+        .transition()
+        .duration(500)
+        .delay((d, i) => i * 15) // Staggered appearance
+        .attr("r", d => sizeScale(d.degree));
 
     const labels = node.append("text")
         .text(d => d.label)
         .attr("y", d => sizeScale(d.degree) + (sizeScale(d.degree) / 2.8) + 3)
         .style("font-size", d => `${Math.max(6, sizeScale(d.degree) / 2.8)}px`)
         .style("display", d => sizeScale(d.degree) > 6 ? "block" : "none")
-        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc');
+        .style("fill", d => d.isEmpty ? '#bbbbbb' : '#cccccc')
+        .style("opacity", 0) // Start transparent
+        .transition()
+        .duration(500)
+        .delay((d, i) => i * 15 + 200) // Appear after circles
+        .style("opacity", 1);
 
     const linkedByIndex = {};
     links.forEach(d => {
@@ -302,6 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     regenButton.onclick = () => {
         if (currentNodes.length > 0) {
+            // Re-draw the graph from scratch to get the "뿅뿅" effect
             drawGraph(currentNodes, currentEdges);
         }
     };
@@ -341,6 +351,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     docContent.innerHTML = '<p>Select a document to view its content.</p>';
 
+    // Store current data for regeneration
     currentNodes = archiveDocs.map(d => ({
         id: d.url,
         label: d.title,
