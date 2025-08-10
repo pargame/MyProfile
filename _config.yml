@@ -67,6 +67,9 @@ collections:
   projects:
     output: true
     permalink: /projects/:path/
+  obsidian:
+    output: true
+    permalink: /obsidian/:path/
 
 # Defaults for specific paths
 # 특정 타입의 문서에 레이아웃 등 기본값을 자동으로 설정합니다.
@@ -89,6 +92,13 @@ defaults:
       type: "projects"
     values:
       layout: "page"
+  -
+    scope:
+      path: ""
+      type: "obsidian"
+    values:
+      layout: "page"
+      in: "Unreal"
 
 # Markdown Processing
 # 마크다운 렌더링 엔진(kramdown)과 관련된 설정을 합니다.

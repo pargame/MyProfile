@@ -3,7 +3,8 @@ layout: null
 ---
 {%- assign studies = site.studies -%}
 {%- assign projects = site.projects -%}
-{%- assign all_docs = studies | concat: projects -%}
+{%- assign obsidian = site.obsidian -%}
+{%- assign all_docs = studies | concat: projects | concat: obsidian -%}
 {%- assign archives = all_docs | map: "in" | uniq | compact -%}
 
 {
