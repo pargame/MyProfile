@@ -94,8 +94,7 @@ defaults:
       layout: "page"
   -
     scope:
-      path: ""
-      type: "obsidian"
+      path: "_obsidian"
     values:
       layout: "page"
       in: "Unreal"
