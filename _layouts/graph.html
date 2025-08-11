@@ -117,7 +117,11 @@ layout: default
       {%- if link_target_normalized != "" -%}
         {%- for target_doc in all_docs -%}
           {%- assign target_doc_basename_normalized = target_doc.basename | downcase | replace: " ", "" -%}
-          {%- if target_doc_basename_normalized == link_target_normalized -%}
+          {%- assign target_doc_title_normalized = target_doc.title | downcase | replace: " ", "" -%}
+          {%- assign target_relative_path = target_doc.path | remove_first: '_obsidian/' | remove: '.md' -%}
+          {%- assign target_path_normalized = target_relative_path | downcase | replace: " ", "" -%}
+
+          {%- if target_doc_basename_normalized == link_target_normalized or target_doc_title_normalized == link_target_normalized or target_path_normalized == link_target_normalized -%}
             {%- assign links_array = links_array | push: target_doc.url -%}
             {%- break -%}
           {%- endif -%}
