@@ -25,7 +25,7 @@
     블랙보드에서 사용할 키들의 이름과 데이터 타입을 정의하는 에셋입니다. `UBlackboardComponent`는 이 에셋을 기반으로 실제 데이터 저장 공간을 만듭니다.
 * **[[UBehaviorTree]]:**
     AI의 행동 로직을 정의하는 그래프입니다. 블랙보드는 이 비헤이비어 트리와 한 쌍으로 작동합니다.
-* **`UBTTask_...`, `UBTDecorator_...`, `UBTService_...`:**
+* *** **[[UBTTask_BlueprintBase]], [[UBTDecorator_BlueprintBase]], [[UBTService_BlueprintBase]]**::**
     비헤이비어 트리를 구성하는 노드들입니다. 이 노드들은 블랙보드의 데이터에 접근하여 AI의 구체적인 행동을 실행하거나 흐름을 제어합니다.
 * **[[AAIController]]:**
     `UBlackboardComponent`와 `UBehaviorTreeComponent`를 소유하고 AI의 전체적인 로직을 실행하는 주체입니다.
