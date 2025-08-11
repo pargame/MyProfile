@@ -10,7 +10,6 @@ description: >- # ">-"는 여러 줄의 설명을 한 줄로 이어줍니다.
   documenting studies and projects.
 github_username: pargame
 version: 3.0 # 사이트 버전 (푸터에 표시됨)
-baseurl: /MyProfile # GitHub Pages와 같은 서브디렉토리 배포를 위한 기본 URL
 
 # -----------------------------------------------------------------------------
 # Build Settings
