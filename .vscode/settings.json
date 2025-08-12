@@ -23,6 +23,15 @@
     "github.copilot.enable": {
         "*": true
     },
+    "chat.experimental.tools.terminal.reuseTerminal": true,
+    "chat.experimental.tools.terminal.preferredTerminal": "integrated",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.profiles.osx": {
+        "zsh": {
+            "path": "zsh",
+            "args": ["-l"]
+        }
+    },
     "chat.experimental.tools.terminal.autoApprove": {
         "cd": true,
         "ls": true,
