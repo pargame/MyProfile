@@ -35,6 +35,7 @@
         "cp": true,
         "mv": true,
         "echo": true,
+        "/^echo .* >> ~/": true,
         "curl": true,
         "wget": true,
         "ps": true,
