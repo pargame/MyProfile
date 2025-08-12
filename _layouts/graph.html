@@ -388,7 +388,7 @@ layout: default
 
 <script type="text/javascript">
   const allData = {
-    "archives": {{ archives_list | sort | jsonify }},
+    "archives": {{ archives | sort | jsonify }},
   "documents": {
     { { docs_json | join: "," } }
   }

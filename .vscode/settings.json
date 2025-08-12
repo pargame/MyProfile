@@ -18,27 +18,5 @@
     "editor.formatOnSave": true,
     "files.associations": {
         "search.json": "liquid"
-    },
-    "github.copilot.chat.alwaysAllowToolUsage": true,
-    "github.copilot.enable": {
-        "*": true
-    },
-    "chat.experimental.tools.terminal.reuseTerminal": true,
-    "chat.experimental.tools.terminal.preferredTerminal": "integrated",
-    "terminal.integrated.defaultProfile.osx": "zsh",
-    "terminal.integrated.profiles.osx": {
-        "zsh": {
-            "path": "zsh",
-            "args": [
-                "-l"
-            ]
-        }
-    },
-    "chat.experimental.tools.terminal.autoApprove": {
-        "/.*/": true,
-        "/sudo/": false,
-        "/rm -rf \\//": false,
-        "kill": false,
-        "pkill": false
     }
 }
