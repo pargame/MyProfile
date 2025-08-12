@@ -29,7 +29,9 @@
     "terminal.integrated.profiles.osx": {
         "zsh": {
             "path": "zsh",
-            "args": ["-l"]
+            "args": [
+                "-l"
+            ]
         }
     },
     "chat.experimental.tools.terminal.autoApprove": {
@@ -51,6 +53,14 @@
         "ruby": true,
         "gem": true,
         "bundle": true,
+        "js": true,
+        "jb": true,
+        "jekyll": true,
+        "npm": true,
+        "yarn": true,
+        "pip": true,
+        "python": true,
+        "node": true,
         "/^ruby --version/": true,
         "/^gem --version/": true,
         "/^bundle --version/": true,
@@ -62,6 +72,9 @@
         "/^pip install/": true,
         "/^python -m/": true,
         "/^node -/": true,
+        "/^curl -/": true,
+        "/^curl http/": true,
+        "/.*grep.*/": true,
         "rm -rf _site": true,
         "rm -rf .sass-cache": true,
         "rm -rf vendor/bundle": true,
@@ -70,6 +83,6 @@
         "pkill": false,
         "/sudo/": false,
         "/rm -rf \\//": false,
-        "/.*/": false
+        "/.*/": true
     }
 }

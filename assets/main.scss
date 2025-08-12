@@ -1,8 +1,4 @@
----
-# Only the main Sass file needs front matter (the dashes are enough)
----
-
-// Import Minima theme with modern @use syntax
+--- # Only the main Sass file needs front matter (the dashes are enough) --- // Import Minima theme with modern @use syntax
 @use "sass:math";
 @use "sass:color";
 @import "minima";
@@ -33,7 +29,7 @@
 
 // 1. 기본 인라인 코드 스타일 (주황색)
 // :not(pre) > code는 <pre> 블록 내부의 코드는 제외하고, 문장 내의 코드에만 스타일을 적용합니다.
-:not(pre) > code {
+:not(pre)>code {
   color: darkorange !important;
   background-color: #333 !important;
   border-radius: 3px !important;
