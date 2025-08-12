@@ -252,7 +252,16 @@ layout: default
 {%- assign documents_json_parts = "" | split: "" -%}
 {%- for doc in all_docs -%}
 {%- comment -%} Extract collection information {%- endcomment -%}
-{%- assign collection_name = doc.collection.label -%}
+{%- assign collection_name = "unknown" -%}
+{%- if doc.path contains "_articles/" -%}
+{%- assign collection_name = "articles" -%}
+{%- elsif doc.path contains "_studies/" -%}
+{%- assign collection_name = "studies" -%}
+{%- elsif doc.path contains "_projects/" -%}
+{%- assign collection_name = "projects" -%}
+{%- elsif doc.path contains "_obsidian/" -%}
+{%- assign collection_name = "obsidian" -%}
+{%- endif -%}
 
 {%- comment -%} Generate title from filename if not present {%- endcomment -%}
 {%- if doc.title -%}
@@ -310,7 +319,16 @@ layout: default
 {%- endfor -%}{%- comment -%} Archive list generation for all documents {%- endcomment -%}
 {%- assign archives_temp = "" -%}
 {%- for doc in all_docs -%}
-{%- assign collection_name = doc.collection.label -%}
+{%- assign collection_name = "unknown" -%}
+{%- if doc.path contains "_articles/" -%}
+{%- assign collection_name = "articles" -%}
+{%- elsif doc.path contains "_studies/" -%}
+{%- assign collection_name = "studies" -%}
+{%- elsif doc.path contains "_projects/" -%}
+{%- assign collection_name = "projects" -%}
+{%- elsif doc.path contains "_obsidian/" -%}
+{%- assign collection_name = "obsidian" -%}
+{%- endif -%}
 {%- if collection_name == "obsidian" -%}
 {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
 {%- if relative_path contains "/" -%}
