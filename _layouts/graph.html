@@ -235,66 +235,6 @@ layout: default
 {%- assign all_docs = all_docs | push: doc -%}
 {%- endfor -%}
 
-{%- comment -%} Generate complete data in one pass {%- endcomment -%}
-{%- assign docs_json = "" | split: "" -%}
-{%- assign archives_list = "" | split: "" -%}
-
-{%- for doc in all_docs -%}
-{%- comment -%} Get document title {%- endcomment -%}
-{%- if doc.title -%}
-{%- assign doc_title = doc.title -%}
-{%- else -%}
-{%- assign filename = doc.path | split: "/" | last | replace: ".md", "" -%}
-{%- assign doc_title = filename -%}
-{%- endif -%}
-
-{%- comment -%} Get collection name {%- endcomment -%}
-{%- assign collection_name = "unknown" -%}
-{%- if doc.path contains "_articles/" -%}
-{%- assign collection_name = "articles" -%}
-{%- elsif doc.path contains "_studies/" -%}
-{%- assign collection_name = "studies" -%}
-{%- elsif doc.path contains "_projects/" -%}
-{%- assign collection_name = "projects" -%}
-{%- elsif doc.path contains "_obsidian/" -%}
-{%- assign collection_name = "obsidian" -%}
-{%- endif -%}
-
-{%- comment -%} Get archive name {%- endcomment -%}
-{%- if collection_name == "obsidian" -%}
-{%- assign rel_path = doc.path | remove_first: "_obsidian/" -%}
-{%- if rel_path contains "/" -%}
-{%- assign path_parts = rel_path | split: "/" -%}
-{%- assign archive_name = path_parts[0] -%}
-{%- else -%}
-{%- assign archive_name = "Root" -%}
-{%- endif -%}
-{%- else -%}
-{%- assign archive_name = collection_name -%}
-{%- endif -%}
-
-{%- comment -%} Add to archives list {%- endcomment -%}
-{%- unless archives_list contains archive_name -%}
-{%- assign archives_list = archives_list | push: archive_name -%}
-{%- endunless -%}
-
-{%- comment -%} Create simplified links array for now {%- endcomment -%}
-{%- assign links_array = "" | split: "" -%}
-
-{%- comment -%} Create document JSON entry {%- endcomment -%}
-{%- capture doc_entry -%}
-"{{ doc.url }}": {
-"title": {{ doc_title | jsonify }},
-"url": {{ doc.url | jsonify }},
-"archive": {{ archive_name | jsonify }},
-"collection": {{ collection_name | jsonify }},
-"content": {{ doc.content | truncate: 1000 | jsonify }},
-"links": []
-}
-{%- endcapture -%}
-{%- assign docs_json = docs_json | push: doc_entry -%}
-{%- endfor -%}
-
 {%- comment -%} Title-based link mapping for all documents {%- endcomment -%}
 {%- assign title_to_url = "" | split: "" -%}
 {%- for doc in all_docs -%}
@@ -389,10 +329,12 @@ layout: default
 <script type="text/javascript">
   const allData = {
     "archives": {{ archives | sort | jsonify }},
-  "documents": {
-    { { docs_json | join: "," } }
-  }
-}; document.addEventListener("DOMContentLoaded", function () {
+    "documents": {
+      {{ documents_json_parts | join: "," }}
+    }
+  };
+  
+  document.addEventListener("DOMContentLoaded", function () {
     const converter = new showdown.Converter();
     const archiveSelector = document.getElementById('archive-selector');
     const docList = document.getElementById('document-list');
