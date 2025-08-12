@@ -284,12 +284,12 @@ layout: default
 {%- comment -%} Create document JSON entry {%- endcomment -%}
 {%- capture doc_entry -%}
 "{{ doc.url }}": {
-  "title": {{ doc_title | jsonify }},
-  "url": {{ doc.url | jsonify }},
-  "archive": {{ archive_name | jsonify }},
-  "collection": {{ collection_name | jsonify }},
-  "content": {{ doc.content | truncate: 1000 | jsonify }},
-  "links": []
+"title": {{ doc_title | jsonify }},
+"url": {{ doc.url | jsonify }},
+"archive": {{ archive_name | jsonify }},
+"collection": {{ collection_name | jsonify }},
+"content": {{ doc.content | truncate: 1000 | jsonify }},
+"links": []
 }
 {%- endcapture -%}
 {%- assign docs_json = docs_json | push: doc_entry -%}
@@ -358,12 +358,12 @@ layout: default
 {%- comment -%} Generate JSON object {%- endcomment -%}
 {%- capture doc_json -%}
 "{{ doc.url }}": {
-  "title": {{ doc_title | jsonify }},
-  "url": {{ doc.url | relative_url | jsonify }},
-  "archive": {{ archive_name | jsonify }},
-  "collection": {{ collection_name | jsonify }},
-  "content": {{ doc.content | jsonify }},
-  "links": {{ links_array | jsonify }}
+"title": {{ doc_title | jsonify }},
+"url": {{ doc.url | relative_url | jsonify }},
+"archive": {{ archive_name | jsonify }},
+"collection": {{ collection_name | jsonify }},
+"content": {{ doc.content | jsonify }},
+"links": {{ links_array | jsonify }}
 }
 {%- endcapture -%}
 {%- assign documents_json_parts = documents_json_parts | push: doc_json -%}
@@ -387,12 +387,12 @@ layout: default
 {%- assign archives = archives_temp | split: "," | uniq | compact | sort -%}
 
 <script type="text/javascript">
-const allData = {
-  "archives": {{ archives_list | sort | jsonify }},
+  const allData = {
+    "archives": {{ archives_list | sort | jsonify }},
   "documents": {
-    {{ docs_json | join: "," }}
+    { { docs_json | join: "," } }
   }
-};  document.addEventListener("DOMContentLoaded", function () {
+}; document.addEventListener("DOMContentLoaded", function () {
     const converter = new showdown.Converter();
     const archiveSelector = document.getElementById('archive-selector');
     const docList = document.getElementById('document-list');
@@ -860,7 +860,7 @@ const allData = {
           e.preventDefault();
           renderDocumentContent(node.id);
           selectNodeProgrammatically(node);
-          
+
           // Update selected state in document list
           docList.querySelectorAll('a').forEach(link => link.classList.remove('selected'));
           a.classList.add('selected');
@@ -885,7 +885,7 @@ const allData = {
     // Initialize archive selector buttons
     function initializeArchiveSelector() {
       archiveSelector.innerHTML = '<label>Select Archive:</label>';
-      
+
       // Add "All" button
       const allButton = document.createElement('button');
       allButton.className = 'archive-button active';
