@@ -9,18 +9,29 @@ description: >- # ">-"는 여러 줄의 설명을 한 줄로 이어줍니다.
   A personal blog and portfolio for Pargame,
   documenting studies and projects.
 github_username: pargame
-version: 3.0 # 사이트 버전 (푸터에 표시됨)
+version: 4.0 # 사이트 버전 (Jekyll 4.x 업그레이드)
 
 # -----------------------------------------------------------------------------
 # Build Settings
 # -----------------------------------------------------------------------------
 # Jekyll 빌드 방식과 관련된 설정을 합니다.
 
+# Jekyll 4.x 호환 설정
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+
 theme: minima
 minima:
   skin: dark # Minima 테마의 다크 모드 스킨을 사용합니다.
 
 plugins:
+  - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-lazy-load-image

@@ -2,7 +2,30 @@
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
 
+// Import Minima theme with modern @use syntax
+@use "sass:math";
+@use "sass:color";
 @import "minima";
+
+// Custom styles to modernize deprecated Sass functions
+.site-nav .page-link {
+  color: var(--brand-color-dark);
+}
+
+.post-meta {
+  color: var(--text-color-light);
+}
+
+.highlight .code {
+  background-color: var(--grey-color-lighter);
+}
+
+// Custom properties for better color management
+:root {
+  --brand-color-dark: #{color.adjust($brand-color, $lightness: -15%)};
+  --text-color-light: #{color.adjust($text-color, $lightness: 18%)};
+  --grey-color-lighter: #{color.adjust($grey-color-light, $lightness: 6%)};
+}
 
 // -----------------------------------------------------------------------------
 // Pargame's Custom Style v9 - 통합 스타일 가이드
