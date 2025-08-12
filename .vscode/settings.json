@@ -18,5 +18,39 @@
     "editor.formatOnSave": true,
     "files.associations": {
         "search.json": "liquid"
+    },
+    "github.copilot.chat.alwaysAllowToolUsage": true,
+    "github.copilot.enable": {
+        "*": true
+    },
+    "chat.experimental.tools.terminal.autoApprove": {
+        "cd": true,
+        "ls": true,
+        "pwd": true,
+        "cat": true,
+        "grep": true,
+        "find": true,
+        "git": true,
+        "bundle": true,
+        "jekyll": true,
+        "npm": true,
+        "yarn": true,
+        "pip": true,
+        "python": true,
+        "node": true,
+        "mkdir": true,
+        "touch": true,
+        "cp": true,
+        "mv": true,
+        "rm": true,
+        "echo": true,
+        "curl": true,
+        "wget": true,
+        "ps": true,
+        "kill": true,
+        "pkill": true,
+        "/^bundle exec/": true,
+        "/^git (add|commit|push|pull|status|log|diff)/": true,
+        "/^jekyll (serve|build)/": true
     }
 }
