@@ -1,0 +1,171 @@
+---
+layout: null
+permalink: /graph/data.json
+---
+{%- assign all_docs = site.obsidian -%
+}
+
+{%- comment -%
+} Build Title -> URL map {%- endcomment -%
+}
+{%- assign title_to_url = "" | split: "" -%
+}
+{%- for doc in all_docs -%
+}
+    {%- assign doc_title = doc.title | default: doc.path | split: "/" | last | replace: ".md",
+    "" -%
+}
+    {%- assign url_rel = doc.url | relative_url -%
+}
+    {%- assign title_pair = doc_title | append: "::" | append: url_rel -%
+}
+    {%- assign title_to_url = title_to_url | push: title_pair -%
+}
+{%- endfor -%
+}
+
+{%- comment -%
+} Build documents map {%- endcomment -%
+}
+{%- assign documents_json_parts = "" | split: "" -%
+}
+{%- for doc in all_docs -%
+}
+    {%- assign collection_name = "obsidian" -%
+}
+    {%- assign doc_title = doc.title | default: doc.path | split: "/" | last | replace: ".md",
+    "" -%
+}
+    {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%
+}
+    {%- if relative_path contains "/" -%
+}
+        {%- assign path_parts = relative_path | split: "/" -%
+}
+        {%- assign archive_name = path_parts.first -%
+}
+    {%- else -%
+}
+        {%- assign archive_name = "Root" -%
+}
+    {%- endif -%
+}
+
+    {%- comment -%
+} Extract [
+    [Wiki Links
+    ]
+] and resolve to URLs {%- endcomment -%
+}
+    {%- assign content_parts = doc.content | split: "[[" -%
+}
+    {%- assign links_array = "" | split: "" -%
+}
+    {%- for part in content_parts offset: 1 -%
+}
+        {%- assign link_text_raw = part | split: "]]" | first | strip -%
+}
+        {%- assign link_target = link_text_raw | split: "|" | first | split: "#" | first | strip -%
+}
+        {%- if link_target != "" and link_target != doc_title -%
+}
+            {%- for title_pair in title_to_url -%
+}
+                {%- assign pair_parts = title_pair | split: "::" -%
+}
+                {%- assign target_title = pair_parts[
+        0
+    ] -%
+}
+                {%- assign target_url = pair_parts[
+        1
+    ] -%
+}
+                {%- if target_title == link_target -%
+}
+                    {%- assign links_array = links_array | push: target_url -%
+}
+                    {%- break -%
+}
+                {%- endif -%
+}
+            {%- endfor -%
+}
+        {%- endif -%
+}
+    {%- endfor -%
+}
+    {%- assign links_array = links_array | uniq -%
+}
+
+    {%- capture doc_json -%
+}
+"{{ doc.url | relative_url }}": {
+    "title": {
+        { doc_title | jsonify
+        }
+    },
+    "url": {
+        { doc.url | relative_url | jsonify
+        }
+    },
+    "archive": {
+        { archive_name | jsonify
+        }
+    },
+    "collection": {
+        { collection_name | jsonify
+        }
+    },
+    "links": {
+        { links_array | jsonify
+        }
+    }
+}
+    {%- endcapture -%
+}
+    {%- assign documents_json_parts = documents_json_parts | push: doc_json -%
+}
+{%- endfor -%
+}
+
+{%- comment -%
+} Build archives list {%- endcomment -%
+}
+{%- assign archives_temp = "" -%
+}
+{%- for doc in all_docs -%
+}
+    {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%
+}
+    {%- if relative_path contains "/" -%
+}
+        {%- assign path_parts = relative_path | split: "/" -%
+}
+        {%- assign archive_name = path_parts.first -%
+}
+    {%- else -%
+}
+        {%- assign archive_name = "Root" -%
+}
+    {%- endif -%
+}
+    {%- assign archives_temp = archives_temp | append: archive_name | append: "," -%
+}
+{%- endfor -%
+}
+{%- assign archives = archives_temp | split: "," | uniq | compact | sort -%
+}
+
+{
+    "archives": {
+        { archives | jsonify
+        }
+    },
+    "documents": {
+        {
+            { documents_json_parts | join: ",\n"
+            }
+        }
+    }
+}

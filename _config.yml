@@ -25,6 +25,7 @@ kramdown:
   syntax_highlighter_opts:
     block:
       line_numbers: true
+  hard_wrap: false
 
 theme: minima
 minima:
@@ -72,6 +73,7 @@ header_pages:
 collections:
   articles:
     output: true
+    permalink: /articles/:path/
   studies:
     output: true
     permalink: /studies/:path/
@@ -109,10 +111,4 @@ defaults:
     values:
       layout: "page"
 
-# Markdown Processing
-# 마크다운 렌더링 엔진(kramdown)과 관련된 설정을 합니다.
-markdown: kramdown
-kramdown:
-  input: GFM # GitHub Flavored Markdown 활성화
-  hard_wrap: false
-  syntax_highlighter: rouge # 코드 구문 강조
+# Markdown Processing 설정은 상단 kramdown 블록에서 관리합니다.
