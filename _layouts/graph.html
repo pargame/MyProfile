@@ -220,20 +220,8 @@ layout: default
   </div>
 </div>
 
-{%- comment -%} Collect all documents from collections {%- endcomment -%}
-{%- assign all_docs = "" | split: "" -%}
-{%- for doc in site.articles -%}
-{%- assign all_docs = all_docs | push: doc -%}
-{%- endfor -%}
-{%- for doc in site.studies -%}
-{%- assign all_docs = all_docs | push: doc -%}
-{%- endfor -%}
-{%- for doc in site.projects -%}
-{%- assign all_docs = all_docs | push: doc -%}
-{%- endfor -%}
-{%- for doc in site.obsidian -%}
-{%- assign all_docs = all_docs | push: doc -%}
-{%- endfor -%}
+{%- comment -%} Collect documents from obsidian collection only {%- endcomment -%}
+{%- assign all_docs = site.obsidian -%}
 
 {%- comment -%} Title-based link mapping for all documents {%- endcomment -%}
 {%- assign title_to_url = "" | split: "" -%}
@@ -248,20 +236,11 @@ layout: default
 {%- assign title_to_url = title_to_url | push: title_pair -%}
 {%- endfor -%}
 
-{%- comment -%} Document data generation {%- endcomment -%}
+{%- comment -%} Document data generation for obsidian collection only {%- endcomment -%}
 {%- assign documents_json_parts = "" | split: "" -%}
 {%- for doc in all_docs -%}
-{%- comment -%} Extract collection information {%- endcomment -%}
-{%- assign collection_name = "unknown" -%}
-{%- if doc.path contains "_articles/" -%}
-{%- assign collection_name = "articles" -%}
-{%- elsif doc.path contains "_studies/" -%}
-{%- assign collection_name = "studies" -%}
-{%- elsif doc.path contains "_projects/" -%}
-{%- assign collection_name = "projects" -%}
-{%- elsif doc.path contains "_obsidian/" -%}
+{%- comment -%} All documents are from obsidian collection {%- endcomment -%}
 {%- assign collection_name = "obsidian" -%}
-{%- endif -%}
 
 {%- comment -%} Generate title from filename if not present {%- endcomment -%}
 {%- if doc.title -%}
@@ -271,17 +250,13 @@ layout: default
 {%- assign doc_title = file_name -%}
 {%- endif -%}
 
-{%- comment -%} Extract archive name (folder name for obsidian, collection name for others) {%- endcomment -%}
-{%- if collection_name == "obsidian" -%}
+{%- comment -%} Extract archive name (folder name for obsidian) {%- endcomment -%}
 {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
 {%- if relative_path contains "/" -%}
 {%- assign path_parts = relative_path | split: "/" -%}
 {%- assign archive_name = path_parts.first -%}
 {%- else -%}
 {%- assign archive_name = "Root" -%}
-{%- endif -%}
-{%- else -%}
-{%- assign archive_name = collection_name -%}
 {%- endif -%}
 
 {%- comment -%} Extract [[]] links and map to titles {%- endcomment -%}
@@ -316,29 +291,15 @@ layout: default
 }
 {%- endcapture -%}
 {%- assign documents_json_parts = documents_json_parts | push: doc_json -%}
-{%- endfor -%}{%- comment -%} Archive list generation for all documents {%- endcomment -%}
+{%- endfor -%}{%- comment -%} Archive list generation for obsidian documents only {%- endcomment -%}
 {%- assign archives_temp = "" -%}
 {%- for doc in all_docs -%}
-{%- assign collection_name = "unknown" -%}
-{%- if doc.path contains "_articles/" -%}
-{%- assign collection_name = "articles" -%}
-{%- elsif doc.path contains "_studies/" -%}
-{%- assign collection_name = "studies" -%}
-{%- elsif doc.path contains "_projects/" -%}
-{%- assign collection_name = "projects" -%}
-{%- elsif doc.path contains "_obsidian/" -%}
-{%- assign collection_name = "obsidian" -%}
-{%- endif -%}
-{%- if collection_name == "obsidian" -%}
 {%- assign relative_path = doc.path | remove_first: "_obsidian/" -%}
 {%- if relative_path contains "/" -%}
 {%- assign path_parts = relative_path | split: "/" -%}
 {%- assign archive_name = path_parts.first -%}
 {%- else -%}
 {%- assign archive_name = "Root" -%}
-{%- endif -%}
-{%- else -%}
-{%- assign archive_name = collection_name -%}
 {%- endif -%}
 {%- assign archives_temp = archives_temp | append: archive_name | append: "," -%}
 {%- endfor -%}
@@ -347,11 +308,11 @@ layout: default
 <script type="text/javascript">
   const allData = {
     "archives": {{ archives | sort | jsonify }},
-    "documents": {
-      {{ documents_json_parts | join: "," }}
-    }
+  "documents": {
+    { { documents_json_parts | join: "," } }
+  }
   };
-  
+
   document.addEventListener("DOMContentLoaded", function () {
     const converter = new showdown.Converter();
     const archiveSelector = document.getElementById('archive-selector');
