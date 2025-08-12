@@ -3,20 +3,12 @@ layout: null
 ---
 {% assign all_content = site.articles | concat: site.studies | concat: site.projects | concat: site.obsidian %}
 [
-  {% for post in all_content %}
-    {%- if post.date -%}
-      {%- assign meta = post.date | date_to_string | append: ' | ' | append: post.categories -%}
-    {%- else -%}
-      {%- assign meta = post.In -%}
-    {%- endif -%}
-    {
-      "title"    : "{{ post.title | escape }}",
-      "url"      : "{{ site.baseurl }}{{ post.url }}",
-      "meta"     : "{{ meta | escape }}",
-      "content"  : "{{ post.content | strip_html | strip_newlines | remove_chars | escape }}"
-    }
-    {% unless forloop.last %},{% endunless %}
-  {% endfor %}
+{% for post in all_content %}
+  {
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "meta": {{ post.date | default: "" | date: "%Y-%m-%d" | jsonify }},
+    "content": {{ post.content | strip_html | strip_newlines | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
 ]
-
-{%- assign remove_chars = "" | split: "" -%}

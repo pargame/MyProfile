@@ -1,0 +1,16 @@
+{
+  "Inline code (wrap selection with backticks)": {
+    "prefix": "ii",
+    "body": [
+      "`$TM_SELECTED_TEXT$0`"
+    ]
+  },
+  "Fenced code block": {
+    "prefix": "fff",
+    "body": [
+      "```$1",
+      "$TM_SELECTED_TEXT$0",
+      "```"
+    ]
+  }
+}

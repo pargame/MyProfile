@@ -1,131 +1,35 @@
-# Pargame's Blog & Knowledge Archive
+## Pargame 블로그/아카이브 (Jekyll)
 
-This repository contains the source for Pargame's personal blog, portfolio, and interconnected knowledge archive, all powered by Jekyll.
+이 저장소는 Jekyll로 만든 개인 블로그 + 지식 아카이브입니다. 간단히 쓰고, 쉽게 띄우는 걸 목표로 합니다.
 
-## ✨ Core Features & Architecture
+### 핵심 구성
+- Jekyll 3.10 + Minima(dark)
+- 컬렉션: `_articles`(블로그), `_studies`, `_projects`, `_obsidian`
+- 그래프 페이지: `_layouts/graph.html`(D3.js + Showdown, Obsidian 링크 시각화)
+- 스타일: `assets/main.scss` → `assets/main.css`, 전역 오버라이드 `assets/css/custom.css`
 
-*   **Content Hub**: Manages three distinct types of content:
-    *   `_articles`: Chronological blog posts.
-    *   `_studies` & `_projects`: Structured, topic-based knowledge and project documentation.
-    *   `_obsidian`: A Zettelkasten-style knowledge base where concepts are linked together.
-*   **Interactive Knowledge Graph**: A key feature of this blog is the **Archive Explorer** (`/graph`), a dynamic, interactive graph built with D3.js. It visually represents the connections between documents in the `_obsidian` collection, allowing for intuitive exploration of the knowledge base.
-*   **Simplified Grouping**: Content in `_studies`, `_projects`, and `_obsidian` is automatically grouped based on its directory path (e.g., `_studies/UnrealEngine/` becomes the "UnrealEngine" group).
-*   **Automation**: Leverages Jekyll's `collections` and `defaults` to minimize manual configuration.
+### 로컬 실행
+```bash
+bundle install
+bundle exec jekyll serve
+```
+VS Code에서 Terminal → Run Task → “Jekyll: Serve”도 가능합니다.
 
----
+### 글 작성 규칙(요약)
+- 모든 문서에 Front Matter(`---`) 필요
+- `_articles`: `title`, `date`, `categories`(리스트 가능), `author` 권장
+- `_studies`, `_projects`: `title` 필수(폴더 경로로 그룹핑)
+- `_obsidian`: `title` 필수, 본문에 `[[정확한제목]]`으로 연결 생성
 
-## 🚀 Getting Started: Running Your Own Version
+### 폴더 참고(간단)
+- `_config.yml`: 사이트 설정/컬렉션/기본 레이아웃
+- `_layouts/*`: `default`, `home`, `post`, `graph` 등 레이아웃
+- `_includes/*`: `head`, `header`, `footer` 등 공통 조각
+- `assets/*`: 스타일 및 이미지
 
-This template is compatible with macOS, Windows, and Linux. Follow these steps to set up a local version.
+### 유지보수 팁
+- `_site/`는 빌드 산출물입니다(커밋 대상 아님). 필요하면 삭제 후 다시 빌드하세요.
+- 그래프 스키마를 바꾸면 Liquid(데이터 생성)와 JS(렌더)를 같이 수정하세요.
+- 자잘한 스타일은 `assets/css/custom.css`에서 덮어쓰면 됩니다.
 
-### 1. Prerequisites
-
-Ensure you have Ruby and Bundler installed. If not, follow the official guide for your operating system.
-
-*   **[Jekyll Installation Guide](https://jekyllrb.com/docs/installation/)**
-
-### 2. Setup and Local Server
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/pargame/MyProfile.git
-    cd MyProfile
-    ```
-
-2.  **Install dependencies:** This command installs all necessary Jekyll plugins and libraries defined in the `Gemfile`.
-    ```bash
-    bundle install
-    ```
-
-3.  **Run the local preview server:** Use this command to build the site and serve it locally. The server will automatically rebuild the site when you make changes to the content.
-    ```bash
-    bundle exec jekyll serve
-    ```
-    *   Once the server is running, open your web browser and navigate to `http://127.0.0.1:4000` to see your blog.
-    *   To stop the server, press `Ctrl + C` in your terminal.
-
-### 3. Customization
-
-To make this blog your own, edit the following:
-
-*   **`_config.yml`**: Change `title`, `email`, `description`, `github_username`, etc., to your own information.
-*   **`about.md`**: Write your own introduction.
-*   **Delete or modify existing content**: Clear out the example files in `_articles`, `_studies`, `_projects`, and `_obsidian` and start creating your own content.
-
----
-
-## ✍️ Content Creation Guide
-
-This blog supports three main content types.
-
-### 1. Articles (Blog Posts)
-
-For standard, time-sensitive blog posts.
-
-*   **Location**: `_articles/`
-*   **Grouping**: Classified by `categories` in the front matter.
-*   **Front Matter**:
-    ```yaml
-    ---
-    title: "Title of Your Post"
-    date: 2025-08-15 10:00:00 +0900
-    categories: Tech
-    author: "YourName"
-    ---
-
-    (Content goes here...)
-    ```
-
-### 2. Studies & Projects (Structured Docs)
-
-For in-depth topics or project documentation.
-
-*   **Location**: `_studies/GroupName/` or `_projects/GroupName/`
-*   **Grouping**: Automatically grouped by the sub-folder name (`GroupName`).
-*   **Front Matter**:
-    ```yaml
-    ---
-    title: "Title of Your Study or Project"
-    author: "YourName"
-    ---
-
-    (Content goes here...)
-    ```
-
-### 3. Obsidian (Knowledge Archive)
-
-For building a web of connected knowledge, visualized in the Archive Explorer.
-
-*   **Location**: `_obsidian/GroupName/`
-*   **Grouping**: Automatically grouped by the sub-folder name (`GroupName`).
-*   **Front Matter is Crucial**: Unlike other content, the front matter here directly controls the graph visualization.
-    ```yaml
-    ---
-    title: "The Exact Name of This Node"
-    author: "YourName"
-    ---
-
-    (Content, including [[links]], goes here...)
-    ```
-    *   `title`: **This is mandatory.** The text you provide here becomes the **display name for the node** in the interactive graph. It is also the target for links from other documents.
-*   **Creating Links**: To create a connection between documents (which becomes an edge in the graph), enclose the **exact `title`** of another document in double square brackets.
-    ### 3. Obsidian (Knowledge Archive)
-
-For building a web of connected knowledge, visualized in the Archive Explorer.
-
-*   **Location**: `_obsidian/GroupName/`
-*   **Node Label**: The name of each node in the graph is **determined by its filename** (e.g., `UAnimInstance.md` becomes the `UAnimInstance` node).
-*   **Front Matter**: You **must** use a minimal, empty front matter (`--- ---`). **Do not add a `title` attribute** or any other content. The system relies on Jekyll automatically generating a title from the filename for other parts of the site, but the graph itself uses the filename.
-*   **Creating Links**: To create a connection (an edge in the graph), enclose the **filename (without extension)** of another document in double square brackets.
-    *   Example: To link to `UAnimInstance.md`, you must use `[[UAnimInstance]]` in your text.
-
----
-
-##  troubleshooting
-
-### "Address already in use" Error
-
-If the `serve` command fails with this error, another process is using port `4000`.
-
-*   **macOS / Linux:** Find the process ID (PID) with `lsof -i :4000` and terminate it with `kill -9 [PID]`.
-*   **Windows:** Find the PID with `netstat -ano | findstr :4000` and terminate it with `taskkill /F /PID [PID]`.
+필요시 더 자세한 개발 메모는 `CONTRIBUTING.md`를 참고하세요.

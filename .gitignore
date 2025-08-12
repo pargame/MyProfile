@@ -16,8 +16,11 @@ vendor/
 *.log
 tmp/
 
-# Visual Studio Code
-.vscode/
+# Visual Studio Code (workspace settings are committed)
+# .vscode/
 
 # Obsidian specific
 _obsidian/Unreal/.obsidian/
+
+# Gemini artifacts
+.gemini/

@@ -1,4 +1,4 @@
-current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
+current directory: /Users/pargamer/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
 /Users/pargamer/.rbenv/versions/3.3.3/bin/ruby extconf.rb
 checking for pkg-config for libffi... ["-I/Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/usr/include/ffi ", "", "-lffi"]
 checking for ffi_prep_closure_loc() in -lffi... yes
@@ -10,11 +10,11 @@ checking for whether -pthread is accepted as LDFLAGS... yes
 creating extconf.h
 creating Makefile
 
-current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
-make DESTDIR\= sitearchdir\=./.gem.20250728-66950-m8g6mn sitelibdir\=./.gem.20250728-66950-m8g6mn clean
+current directory: /Users/pargamer/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20250812-44183-91wu9a sitelibdir\=./.gem.20250812-44183-91wu9a clean
 
-current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
-make DESTDIR\= sitearchdir\=./.gem.20250728-66950-m8g6mn sitelibdir\=./.gem.20250728-66950-m8g6mn
+current directory: /Users/pargamer/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20250812-44183-91wu9a sitelibdir\=./.gem.20250812-44183-91wu9a
 compiling AbstractMemory.c
 compiling ArrayType.c
 compiling Buffer.c
@@ -41,9 +41,9 @@ compiling ffi.c
 linking shared-object ffi_c.bundle
 ld: warning: ignoring duplicate libraries: '-lffi'
 
-current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
-make DESTDIR\= sitearchdir\=./.gem.20250728-66950-m8g6mn sitelibdir\=./.gem.20250728-66950-m8g6mn install
-/usr/bin/install -c -m 0755 ffi_c.bundle ./.gem.20250728-66950-m8g6mn
+current directory: /Users/pargamer/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20250812-44183-91wu9a sitelibdir\=./.gem.20250812-44183-91wu9a install
+/usr/bin/install -c -m 0755 ffi_c.bundle ./.gem.20250812-44183-91wu9a
 
-current directory: /Users/pargamer/GitHub/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
-make DESTDIR\= sitearchdir\=./.gem.20250728-66950-m8g6mn sitelibdir\=./.gem.20250728-66950-m8g6mn clean
+current directory: /Users/pargamer/repos/MyProfile/vendor/bundle/ruby/3.3.0/gems/ffi-1.17.2/ext/ffi_c
+make DESTDIR\= sitearchdir\=./.gem.20250812-44183-91wu9a sitelibdir\=./.gem.20250812-44183-91wu9a clean

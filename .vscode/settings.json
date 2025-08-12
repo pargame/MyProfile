@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        "_site": true,
+        ".sass-cache": true,
+        "vendor/bundle": true,
+        ".gemini": true,
+        "_includes/navigation.html": true,
+        "assets/css/style.css": true
+    },
+    "search.exclude": {
+        "_site": true,
+        ".sass-cache": true,
+        "vendor/bundle": true,
+        ".gemini": true,
+        "_includes/navigation.html": true,
+        "assets/css/style.css": true
+    },
+    "editor.formatOnSave": true,
+    "files.associations": {
+        "search.json": "liquid"
+    }
+}

@@ -173,7 +173,7 @@ DYLD_LIBRARY_PATH=.:/Users/pargamer/.rbenv/versions/3.3.3/lib "clang -o conftest
 ld: warning: ignoring duplicate libraries: '-lcrypto', '-lssl'
 Undefined symbols for architecture arm64:
   "_rb_thread_blocking_region", referenced from:
-      _t in conftest-420b71.o
+      _t in conftest-1dd158.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 checked program was:
@@ -340,7 +340,7 @@ DYLD_LIBRARY_PATH=.:/Users/pargamer/.rbenv/versions/3.3.3/lib "clang -o conftest
 ld: warning: ignoring duplicate libraries: '-lcrypto', '-lssl'
 Undefined symbols for architecture arm64:
   "_rb_enable_interrupt", referenced from:
-      _t in conftest-5463a5.o
+      _t in conftest-d192d9.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 checked program was:
@@ -524,7 +524,7 @@ DYLD_LIBRARY_PATH=.:/Users/pargamer/.rbenv/versions/3.3.3/lib "clang -o conftest
 ld: warning: ignoring duplicate libraries: '-lcrypto', '-lssl'
 Undefined symbols for architecture arm64:
   "_pipe2", referenced from:
-      _t in conftest-c88c25.o
+      _t in conftest-390f95.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 checked program was:
@@ -581,7 +581,7 @@ DYLD_LIBRARY_PATH=.:/Users/pargamer/.rbenv/versions/3.3.3/lib "clang -o conftest
 ld: warning: ignoring duplicate libraries: '-lcrypto', '-lssl'
 Undefined symbols for architecture arm64:
   "_accept4", referenced from:
-      _t in conftest-dc2bc4.o
+      _t in conftest-eeb8ad.o
 ld: symbol(s) not found for architecture arm64
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
 checked program was:
